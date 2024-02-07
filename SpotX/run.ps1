@@ -290,7 +290,7 @@ function CallLang($clg) {
     if ($mirror) {
         $urlLang = "https://spotx-official.github.io/SpotX/scripts/installer-lang/$clg.ps1"
     }
-    else { $urlLang = "https://raw.githubusercontent.com/SpotX-Official/SpotX/main/scripts/installer-lang/$clg.ps1" }
+    else { $urlLang = "https://raw.githubusercontent.com/SpotX-Official/main/SpotX/scripts/installer-lang/$clg.ps1" }
     
     $ProgressPreference = 'SilentlyContinue'
     
