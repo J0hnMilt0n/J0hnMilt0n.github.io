@@ -1060,7 +1060,7 @@ function Helper($paramname) {
 
             $svg_tg = $webjson.others.discriptions.svgtg
             $svg_git = $webjson.others.discriptions.svggit
-            $svg_faq = $webjson.others.discriptions.svgfaq
+            $svg_faq = $webjson.others.discriptions.svgweb
             $replace = $webjson.others.discriptions.replace
 
             $replacedText = $replace -f $svg_git, $svg_tg, $svg_faq
