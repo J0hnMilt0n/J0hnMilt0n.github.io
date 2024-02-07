@@ -897,7 +897,7 @@ if ($mirror) {
 
     $url = "https://J0hnMilt0n.github.io/SpotX/patches/patches.json"
 }
-else { $url = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/SpotX/main/patches/patches.json" }
+else { $url = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/patches.json" }
 
 $retries = 0
 
