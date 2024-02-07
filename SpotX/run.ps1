@@ -290,7 +290,7 @@ function CallLang($clg) {
     if ($mirror) {
         $urlLang = "https://J0hnMilt0n.github.io/SpotX/scripts/installer-lang/$clg.ps1"
     }
-    else { $urlLang = "https://raw.githubusercontent.com/J0hnMilt0n/SpotX/main/scripts/installer-lang/$clg.ps1" }
+    else { $urlLang = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/scripts/installer-lang/$clg.ps1" }
     
     $ProgressPreference = 'SilentlyContinue'
     
