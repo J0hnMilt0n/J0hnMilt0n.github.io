@@ -288,9 +288,9 @@ if ($psv -ge 7) {
 function CallLang($clg) {
 
     if ($mirror) {
-        $urlLang = "https://J0hnMilt0n.github.io/SpotX/scripts/installer-lang/$clg.ps1"
+        $urlLang = "https://SpotX-Official.github.io/SpotX/scripts/installer-lang/$clg.ps1"
     }
-    else { $urlLang = "https://raw.githubusercontent.com/J0hnMilt0n/SpotX/main/scripts/installer-lang/$clg.ps1" }
+    else { $urlLang = "https://raw.githubusercontent.com/SpotX-Official/SpotX/main/scripts/installer-lang/$clg.ps1" }
     
     $ProgressPreference = 'SilentlyContinue'
     
