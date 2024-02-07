@@ -1,8 +1,8 @@
 [PSCustomObject]@{
     Welcome         = "
-╔════════════════════════════════════════════╗
-║ Üdvözöllek a SpotX Windowsos telepítőjében ║
-╚════════════════════════════════════════════╝"
+╔══════════════════════════════╗
+║ Welcome to SpotX for Windows ║
+╚══════════════════════════════╝"
     Incorrect       = "Hoppá, helytelen érték,"
     Incorrect2      = "Próbáld újra "
     Download        = "Letöltési hiba"
