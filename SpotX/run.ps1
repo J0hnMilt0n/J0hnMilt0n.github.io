@@ -291,7 +291,7 @@ $lang = CallLang -clg $langCode
 # Set variable 'ru'.
 if ($langCode -eq 'ru') { 
     $ru = $true
-    $urlru = "https://J0hnMilt0n.github.io/SpotifyX/patches/Augmented%20translation/ru.json"
+    $urlru = "https://SpotX-Official.github.io/SpotX/patches/Augmented%20translation/ru.json"
     $webjsonru = (Invoke-WebRequest -useb -Uri $urlru).Content | ConvertFrom-Json
 }
 
