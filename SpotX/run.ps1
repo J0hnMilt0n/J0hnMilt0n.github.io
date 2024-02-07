@@ -862,7 +862,7 @@ if ($ch -eq 'n') {
 
 $ch = $null
 
-$url = "https://J0hnMilt0n.github.io/SpotifyX/patches/patches.json"
+$url = "https://J0hnMilt0n.github.io/SpotX/patches/patches.json"
 $retries = 0
 
 while ($retries -lt 3) {
