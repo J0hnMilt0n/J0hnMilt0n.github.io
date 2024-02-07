@@ -267,7 +267,7 @@ if ($psv -ge 7) {
 
 function CallLang($clg) {
 
-    $urlLang = "https://J0hnMilt0n.github.io/SpotifyX/scripts/installer-lang/$clg.ps1"
+    $urlLang = "https://SpotX-Official.github.io/SpotX/scripts/installer-lang/$clg.ps1"
     $ProgressPreference = 'SilentlyContinue'
     
     try {
