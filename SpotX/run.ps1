@@ -533,7 +533,7 @@ taskkill /f /im Spotify.exe /t > $null 2>&1
 # Remove Spotify Windows Store If Any
 if ($win10 -or $win11 -or $win8_1 -or $win8 -or $win12) {
 
-    if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic) {
+    if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic -erroraction 'silentlycontinue') {
         Write-Host ($lang).MsSpoti`n
         
         if (!($confirm_uninstall_ms_spoti)) {
