@@ -317,9 +317,9 @@ if ($langCode -eq 'ru') {
     $ru = $true
 
     if ($mirror) {
-        $urlru = "https://spotx-official.github.io/SpotX/patches/Augmented%20translation/ru.json"
+        $urlru = "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json"
     }
-    else { $urlru = "https://raw.githubusercontent.com/SpotX-Official/SpotX/main/patches/Augmented%20translation/ru.json" }
+    else { $urlru = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/SpotX/main/patches/Augmented%20translation/ru.json" }
 
     $webjsonru = (Invoke-WebRequest -useb -Uri $urlru).Content | ConvertFrom-Json
 }
@@ -368,7 +368,7 @@ if (!($version -and $version -match $match_v)) {
     }
     else {  
         # Recommended version for Win 10-12
-        $onlineFull = "1.2.30.1135.g02fef27a-399"
+        $onlineFull = "1.2.31.1205.g4d59ad7c-1561"
     }
 }
 else {
@@ -1060,10 +1060,10 @@ function Helper($paramname) {
 
             $svg_tg = $webjson.others.discriptions.svgtg
             $svg_git = $webjson.others.discriptions.svggit
-            $svg_web = $webjson.others.discriptions.svgweb
+            $svg_faq = $webjson.others.discriptions.svgfaq
             $replace = $webjson.others.discriptions.replace
 
-            $replacedText = $replace -f $svg_git, $svg_tg, $svg_web
+            $replacedText = $replace -f $svg_git, $svg_tg, $svg_faq
 
             $webjson.others.discriptions.replace = '$1"' + $replacedText + '"})'
 
@@ -1100,6 +1100,7 @@ function Helper($paramname) {
                 }
              
             }
+            if ([version]$offline -eq [version]'1.2.30.1135') {  Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
 
             if (!($plus)) { Move-Json -n 'Plus' -t $Enable -f $Disable }
 
