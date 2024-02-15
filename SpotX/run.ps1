@@ -319,7 +319,7 @@ if ($langCode -eq 'ru') {
     if ($mirror) {
         $urlru = "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json"
     }
-    else { $urlru = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/SpotX/main/patches/Augmented%20translation/ru.json" }
+    else { $urlru = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/Augmented%20translation/ru.json" }
 
     $webjsonru = (Invoke-WebRequest -useb -Uri $urlru).Content | ConvertFrom-Json
 }
