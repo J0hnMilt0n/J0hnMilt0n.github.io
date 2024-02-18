@@ -247,10 +247,7 @@ function Format-LanguageCode {
             $returnCode = 'sk'
             break
         }
-        '^ta-IN' {
-            $returnCode = 'ta'
-            break
-        }
+        
         Default {
             $returnCode = $PSUICulture
             $long_code = $true
