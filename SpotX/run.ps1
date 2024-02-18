@@ -247,7 +247,7 @@ function Format-LanguageCode {
             $returnCode = 'sk'
             break
         }
-        '^ta-IN' {
+        'ta-IN' {
             $returnCode = 'ta'
             break
         }
