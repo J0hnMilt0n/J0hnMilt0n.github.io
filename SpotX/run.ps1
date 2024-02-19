@@ -248,7 +248,7 @@ function Format-LanguageCode {
             break
         }
         '^(ta|ta-IN|ta-MY|ta-SG|ta-LK)' {
-            $returnCode = 'ta'
+            $returnCode = 'ta-IN'
             break
         }
         
