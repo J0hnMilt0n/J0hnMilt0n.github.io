@@ -223,7 +223,7 @@ function Format-LanguageCode {
             $returnCode = 'fil'
             break
         }
-        '^(ta|ta-IN|ta-MY|ta-SG|ta-LK)$' {
+        '^(ta|ta-IN|ta-MY|ta-SG|ta-LK)' {
             $returnCode = 'ta'
             break
         }
