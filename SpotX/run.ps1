@@ -248,7 +248,7 @@ function Format-LanguageCode {
             break
         }
         '^(ta|ta-IN|ta-MY|ta-SG|ta-LK)' {
-            $returnCode = 'ta-IN'
+            $returnCode = 'ta'
             break
         }
         
@@ -266,7 +266,7 @@ function Format-LanguageCode {
     # Checking the short language code
     if ($returnCode -NotIn $supportLanguages) {
         # If the language code is not supported default to English.
-        $returnCode = 'en'
+        $returnCode = 'ta'
     }
     return $returnCode 
 }
