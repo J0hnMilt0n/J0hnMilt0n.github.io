@@ -124,7 +124,7 @@ function Format-LanguageCode {
     
     
     $supportLanguages = @(
-        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk', 'ta', 'ta-IN', 'ta-MY', 'ta-SG', 'ta-LK'
+        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk', 'ta'
     )
     
     
@@ -247,11 +247,10 @@ function Format-LanguageCode {
             $returnCode = 'sk'
             break
         }
-        '^(ta|ta-IN|ta-MY|ta-SG|ta-LK)$' {
+        '^ta' {
             $returnCode = 'ta'
             break
         }
-        
         Default {
             $returnCode = $PSUICulture
             $long_code = $true
@@ -311,23 +310,10 @@ function CallLang($clg) {
     }
 }
 
-
 # Set language code for script.
 $langCode = Format-LanguageCode -LanguageCode $Language
 
 $lang = CallLang -clg $langCode
-
-# Set variable 'ru'.
-if ($langCode -eq 'ru') { 
-    $ru = $true
-
-    if ($mirror) {
-        $urlru = "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json"
-    }
-    else { $urlru = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/Augmented%20translation/ru.json" }
-
-    $webjsonru = (Invoke-WebRequest -useb -Uri $urlru).Content | ConvertFrom-Json
-}
 
 Write-Host ($lang).Welcome
 Write-Host
@@ -373,7 +359,7 @@ if (!($version -and $version -match $match_v)) {
     }
     else {  
         # Recommended version for Win 10-12
-        $onlineFull = "1.2.31.1205.g4d59ad7c-1561"
+        $onlineFull = "1.2.32.997.g4c6498b6-2894"
     }
 }
 else {
@@ -837,6 +823,19 @@ if ($no_shortcut) {
 
 $ch = $null
 
+
+# updated Russian translation
+if ($langCode -eq 'ru' -and [version]$offline -ge [version]"1.1.92.644") { 
+    $ru = $true
+
+    if ($mirror) {
+        $urlru = "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json"
+    }
+    else { $urlru = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/Augmented%20translation/ru.json" }
+
+    $webjsonru = (Invoke-WebRequest -useb -Uri $urlru).Content | ConvertFrom-Json
+}
+
 if ($podcasts_off) { 
     Write-Host ($lang).PodcatsOff`n 
     $ch = 'y'
@@ -1105,11 +1104,11 @@ function Helper($paramname) {
                 }
              
             }
-            if ([version]$offline -eq [version]'1.2.30.1135') {  Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
+            if ([version]$offline -eq [version]'1.2.30.1135') { Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
 
             if (!($plus)) { Move-Json -n 'Plus' -t $Enable -f $Disable }
 
-            if (!($topsearchbar)){ 
+            if (!($topsearchbar)) { 
                 Move-Json -n "GlobalNavBar" -t $Enable -f $Disable 
                 $Custom.GlobalNavBar.value = "control"
             }
@@ -1569,7 +1568,9 @@ If ($test_spa) {
         # Hide submenu item "download"
         $css += $webjson.others.submenudownload.add
         # Hide very high quality streaming
-        $css += $webjson.others.veryhighstream.add
+        if ([version]$offline -le [version]"1.2.29.605") {
+            $css += $webjson.others.veryhighstream.add
+        }
     }
     # Full screen lyrics
     if ($lyrics_stat -and [version]$offline -ge [version]"1.2.3.1107") {
