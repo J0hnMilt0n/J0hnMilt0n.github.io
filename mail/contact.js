@@ -70,7 +70,7 @@ function sendMail() {
     window.location.href = mailtoLink;
   }
 
-$(&quot;.close&quot;).click(function(){
+$('.close').click(function(){
     document.getElementById("contactForm").reset();
 }
   
