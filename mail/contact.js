@@ -17,7 +17,7 @@ $(function () {
             
                 
                     $('#success').html("<div class='alert alert-success'>");
-                    $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' onclick='clearform()' aria-hidden='true'>&times;")
+                    $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
                             .append("</button>");
                     $('#success > .alert-success')
                             .append(name+"<strong>, Opening Mail App to Send Message!. </strong>");
@@ -70,7 +70,7 @@ function sendMail() {
     window.location.href = mailtoLink;
   }
 
-function clearform() {
+$(&quot;.close&quot;).click(function(){
     document.getElementById("contactForm").reset();
 }
   
