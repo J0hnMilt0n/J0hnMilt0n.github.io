@@ -418,9 +418,36 @@
                     "fr": "1.2.32",
                     "to": ""
                 }
+            },
+            "SwitchingBetweenHomeAdsAndHpto": {
+                "name": "allowSwitchingBetweenHomeAdsAndHpto",
+                "description": "Allow switching between the new Home Ads format and legacy HPTO format (as opposed to only showing the legacy HPTO format)",
+                "native_description": "Allow switching between the new Home Ads format and legacy HPTO format (as opposed to only showing the legacy HPTO format)",
+                "version": {
+                    "fr": "1.2.34",
+                    "to": ""
+                }
             }
         },
         "EnableExp": {
+            "HomeViaGraphQLV2": {
+                "name": "enableHomeViaGraphQLV2",
+                "description": "Enable fetching Home via GraphQL",
+                "native_description": "Enable fetching Home via GraphQL",
+                "version": {
+                    "fr": "1.1.86",
+                    "to": "1.1.92"
+                }
+            },
+            "BrowseViaPathfinder": {
+                "name": "enableBrowseViaPathfinder",
+                "description": "Fixes a bug on the genres page",
+                "native_description": "Fetch Browse data from Pathfinder",
+                "version": {
+                    "fr": "1.1.88",
+                    "to": "1.2.24"
+                }
+            },
             "EnhanceLikedSongs": {
                 "name": "enableEnhanceLikedSongs",
                 "description": "Enable Enhance Liked Songs UI and functionality",
@@ -643,7 +670,7 @@
                 "native_description": "Enable the slide-in/out transition on the right sidebar",
                 "version": {
                     "fr": "1.2.8",
-                    "to": ""
+                    "to": "1.2.33"
                 }
             },
             "YLXEnhancements": {
@@ -787,7 +814,7 @@
                 "native_description": "Enables all cards throughout app to be Encore Cards",
                 "version": {
                     "fr": "1.2.26",
-                    "to": ""
+                    "to": "1.2.33"
                 }
             },
             "Plus": {
@@ -862,15 +889,6 @@
                     "to": "1.2.29"
                 }
             },
-            "BrowseViaPathfinder": {
-                "name": "enableBrowseViaPathfinder",
-                "description": "Fixes a bug on the genres page",
-                "native_description": "Fetch Browse data from Pathfinder",
-                "version": {
-                    "fr": "1.1.70",
-                    "to": "1.2.24"
-                }
-            },
             "NotificationCenter": {
                 "name": "enableNotificationCenter",
                 "description": "Enables notification center for desktop & web",
@@ -904,15 +922,6 @@
                 "native_description": "Enable fullscreen mode",
                 "version": {
                     "fr": "1.2.31",
-                    "to": ""
-                }
-            },
-            "GPCSignal": {
-                "name": "enableGPCSignal",
-                "description": "Enables sending of the GPC signal to the backend",
-                "native_description": "Enables sending of the GPC signal to the backend",
-                "version": {
-                    "fr": "1.2.32",
                     "to": ""
                 }
             },
@@ -951,7 +960,7 @@
                     "fr": "1.2.32",
                     "to": ""
                 }
-                },
+            },
             "MiniPlayer": {
                 "name": "enablePiPMiniPlayer",
                 "description": "Enable the PiP Mini Player",
@@ -987,8 +996,25 @@
                     "fr": "1.2.23",
                     "to": ""
                 }
+            },
+            "SidebarAnimations": {
+                "name": "enableSidebarAnimations",
+                "description": "Enable animations on the left and right on the sidebars and makes the right sidebar collapsible",
+                "native_description": "Enable animations on the left and right on the sidebars and makes the right sidebar collapsible",
+                "version": {
+                    "fr": "1.2.34",
+                    "to": ""
+                }
+            },
+            "RightSidebarCollapsible": {
+                "name": "enableRightSidebarCollapsible",
+                "description": "Enable the right sidebar to collapse into the right margin",
+                "native_description": "Enable the right sidebar to collapse into the right margin",
+                "version": {
+                    "fr": "1.2.34",
+                    "to": ""
+                }
             }
-
         },
         "CustomExp": {
             "SocialConnectOnDesktop": {
@@ -1068,7 +1094,7 @@
                 "value": "canonical-top-position",
                 "version": {
                     "fr": "1.2.19",
-                    "to": ""
+                    "to": "1.2.33"
                 }
             },
             "GlobalNavBar": {
@@ -1090,7 +1116,7 @@
                     "fr": "1.2.31",
                     "to": ""
                 }
-                },
+            },
             "CanvasNpv": {
                 "name": "enableCanvasNpv",
                 "description": "Enables short, looping visuals on tracks",
@@ -1130,30 +1156,6 @@
                 "match": "gabo(?=.receiver-service)",
                 "replace": "dodo"
             }
-        },
-        "podcastsoff": {
-            "version": {
-                "fr": "1.1.70",
-                "to": "1.1.92"
-            },
-            "match": "withQueryParameters\\(.\\){return this.queryParameters=.,this}",
-            "replace": "withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(\",\").filter(_ => ![\"episode\",\"show\"].includes(_)).join(\",\")}:e),this}"
-        },
-        "podcastsoff2": {
-            "version": {
-                "fr": "1.1.93",
-                "to": ""
-            },
-            "match": "(\\!?Array.isArray\\(.\\)[\\|&]{2}.===(.).length\\)return null;)",
-            "replace": "$1 let as=$2;if(!Array.isArray(as)){as=e;}for(let q=0;q<(as.children?as.children.length:as.length);q++){const key=(as.children?.[q]||as[q])?.key;if(!key||as[q].props?.value===\"search-history\"){continue;}if(key.match(/(episode|show)/)||(as.title)?.match(/podcasts/i)){return null;}}"
-        },
-        "adsectionsoff": {
-            "version": {
-                "fr": "1.1.93",
-                "to": ""
-            },
-            "match": "((\"Carousel\".+?|onClickCarouselControls:.,spec:.[\\{\\}\\(\\)]{3,8})seeAllUri:(.),index.+?(UBIWrapper|id:.}\\)|\\.spec);)",
-            "replace": "$1 if ($3 && $3.match && $3.match(/(0JQ5DAnM3wGh0gz1MXnu3B|0JQ5DAnM3wGh0gz1MXnu3D|0JQ5IMCbQBLupUQrQFeCzx|0JQ5IMCbQBLqTJyy28YCa9|0JQ5IMCbQBLlC31GvtaB6w|0JQ5DAob0KOew1FBAMSmBz|0JQ5DAnM3wGh0gz1MXnu4w|0JQ5DAnM3wGh0gz1MXnu3C|0JQ5DAnM3wGh0gz1MXnu3s|0JQ5DAnM3wGh0gz1MXnu3M|0JQ5DAob0JCuWaGLU6ntFT|0JQ5DAnM3wGh0gz1MXnucG|0JQ5DAnM3wGh0gz1MXnu3E|0JQ5DAnM3wGh0gz1MXnu4h|0JQ5DAnM3wGh0gz1MXnu7R|0JQ5DAnM3wGh0gz1MXnu3w|0JQ5DAuChZYPe9iDhh2mJz|0JQ5DAnM3wGh0gz1MXnu3x|0JQ5DAob0JCuWaGLU6ntFY|0JQ5DAnM3wGh0gz1MXnu3u|0JQ5DAnM3wGh0gz1MXnu3q|0JQ5DAob0Jr9ClCbkV4pZD|0JQ5DAob0LaV9FOMJ9utY5)/)) {return null};"
         },
         "themelyrics": {
             "theme": {
@@ -1626,6 +1628,14 @@
                 "{window.Spotx={ProductState:$3};if(localStorage.getItem('dev-tools')==='true'){$3.putOverridesValues({pairs:{'com.spotify.madprops.use.ucs.product.state':'1','employee':'1'}})};$1$2",
                 "true$2"
             ]
+        },
+        "block_section": {
+            "version": {
+                "fr": "1.1.86",
+                "to": ""
+            },
+            "match": "(case 6:|const .=await .\\(.,.\\);)((return .\\.abrupt\\(\"|return[ \"],?)(null!=n&&|return\",)?(.)(\\);case 9|\\??.errors\\?Promise.reject.+?errors\\):.))",
+            "replace": "$1sectionBlock($5,\"{0}\");$2"
         },
         "banner_home": {
             "version": {
