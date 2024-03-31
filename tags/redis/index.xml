@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>redis on J0hnMilton</title>
+		<link>https://J0hnMilt0n.github.io/tags/redis/</link>
+		<description>Recent content in redis on J0hnMilt0n.github.io</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>© <a href='J0hnMilt0n.github.io' id='linked'>J0hnMilt0n </a><script type='text/javascript'>var creditsyear = new Date();document.write(creditsyear.getFullYear());</script></copyright>
+		<lastBuildDate>Sun, 29 May 2022 11:39:54 -0400</lastBuildDate>
+		<atom:link href="https://J0hnMilt0n.github.io/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>HTB-Redeemer</title>
+			<link>https://J0hnMilt0n.github.io/post/htb-redeemer/</link>
+			<pubDate>Sun, 29 May 2022 11:39:54 -0400</pubDate>
+			<guid>https://J0hnMilt0n.github.io/post/htb-redeemer/</guid>
+			<description>
+			This box is about “redis”.
+Redis is an open source, in-memory data structure store, used as a database, cache, and message broker.
+In-memory …
+			</description>
+		</item>
+	</channel>
+</rss>
