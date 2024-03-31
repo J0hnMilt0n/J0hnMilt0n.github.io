@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>projects on J0hnMilton</title>
+		<link>https://J0hnMilt0n.github.io/categories/projects/</link>
+		<description>Recent content in projects on J0hnMilt0n.github.io</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>© <a href='J0hnMilt0n.github.io' id='linked'>J0hnMilt0n </a><script type='text/javascript'>var creditsyear = new Date();document.write(creditsyear.getFullYear());</script></copyright>
+		<lastBuildDate>Sun, 22 May 2022 17:06:21 -0400</lastBuildDate>
+		<atom:link href="https://J0hnMilt0n.github.io/categories/projects/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>ISS Overhead Notifier</title>
+			<link>https://J0hnMilt0n.github.io/post/iss-overhead-notifier/</link>
+			<pubDate>Sun, 22 May 2022 17:06:21 -0400</pubDate>
+			<guid>https://J0hnMilt0n.github.io/post/iss-overhead-notifier/</guid>
+			<description>
+			Objectives: Use API to create an ISS tracker.
+Libraries: requests, smtplib, datetime
+Code: ISS Overhead Notifier
+What is API? “Application …
+			</description>
+		</item>
+		<item>
+			<title>Automated Birthday Wisher</title>
+			<link>https://J0hnMilt0n.github.io/post/auto-birthday-wisher/</link>
+			<pubDate>Sat, 21 May 2022 13:02:40 -0400</pubDate>
+			<guid>https://J0hnMilt0n.github.io/post/auto-birthday-wisher/</guid>
+			<description>
+			Objectives: Send email using python code.
+Libraries: smtplib, datetime, pandas
+Code: Automated Birthday Wisher
+How email works? For example, …
+			</description>
+		</item>
+	</channel>
+</rss>
