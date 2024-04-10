@@ -49,14 +49,7 @@
             ]
         },
         "downloadquality": {
-            "version": {
-                "fr": "1.2.30",
-                "to": ""
-            },
-            "match": "(return[^;]*?)(null[^;]*?desktop\\.settings\\.downloadQuality\\.title)",
-            "replace": "return true ? $2"
-        },
-        "downloadqualityold": {
+            
             "version": {
                 "fr": "1.1.70",
                 "to": "1.2.29"
@@ -1584,6 +1577,13 @@
                 ""
             ]
         },
+        "downloadquality": {
+            "version": {
+                "fr": "1.2.30",
+                "to": ""
+            },
+            "add": " .weV_qxFz4gF5sPotO10y:has([for=\"desktop.settings.downloadQuality\"]) {display: none}"
+        },
         "downloadicon": {
             "version": {
                 "fr": "1.1.74",
@@ -1599,6 +1599,10 @@
             "add": " .pzkhLqffqF_4hucrVVQA, .egE6UQjF_UUoCzvMxREj {display:none}"
         },
         "veryhighstream": {
+            "version": {
+                "fr": "1.1.74",
+                "to": "1.2.29"
+            },
             "add": " #desktop\\.settings\\.streamingQuality>option:nth-child(5) {display:none}"
         },
         "fix-old-theme": {
