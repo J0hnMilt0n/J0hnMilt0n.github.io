@@ -49,7 +49,6 @@
             ]
         },
         "downloadquality": {
-            
             "version": {
                 "fr": "1.1.70",
                 "to": "1.2.29"
@@ -418,6 +417,15 @@
                 "native_description": "Allow switching between the new Home Ads format and legacy HPTO format (as opposed to only showing the legacy HPTO format)",
                 "version": {
                     "fr": "1.2.34",
+                    "to": ""
+                }
+            },
+            "LyricsUpsell": {
+                "name": "enableLyricsUpsell",
+                "description": "Enable Lyrics Upsell",
+                "native_description": "Enable Lyrics Upsell",
+                "version": {
+                    "fr": "1.2.36",
                     "to": ""
                 }
             }
@@ -924,7 +932,7 @@
                 "native_description": "New Connect Bar without arrow and clickable elements",
                 "version": {
                     "fr": "1.2.14",
-                    "to": ""
+                    "to": "1.2.35"
                 }
             },
             "ResizableTracklistColumns": {
@@ -950,7 +958,7 @@
                 "description": "Show filter tags on the Liked Songs entity view",
                 "native_description": "Show filter tags on the Liked Songs entity view",
                 "version": {
-                    "fr": "1.2.32",
+                    "fr": "1.2.29",
                     "to": ""
                 }
             },
@@ -1131,14 +1139,14 @@
                 "match": "(?<=desktop-update\/.)2(\/update)",
                 "replace": "7/update"
             },
-            "podcast_ad_block": {
+            "block_slots": {
                 "version": {
                     "fr": "1.1.59",
                     "to": ""
                 },
-                "add": "podcass(?=-(?:pre|mid|post)roll)",
-                "match": "podcast(?=-(?:pre|mid|post)roll)",
-                "replace": "podcass"
+                "add": "slot}(?=.{3,8}override_url)",
+                "match": "slots(?=.{3,8}override_url)",
+                "replace": "slot}"
             },
             "block_gabo": {
                 "version": {
@@ -1433,7 +1441,7 @@
             },
             "match": [
                 "(:hover{color:var)\\(--lyrics-color-active\\)",
-                "(kGR_hu4tdj9PnUlSPaRL{color:var)\\(--lyrics-color-inactive\\)"
+                "((?:kGR_hu4tdj9PnUlSPaRL|LomBcMvfM8AEmZGquAdj){color:var)\\(--lyrics-color-inactive\\)"
             ],
             "replace": [
                 "$1(--lyrics-color-hover)!important",
@@ -1449,7 +1457,7 @@
             "replace": "$1 null;"
         },
         "byspotx": {
-            "add": "// Patched by SpotX"
+            "add": "// Patched by J0hnMilt0n"
         },
         "disablesentry": {
             "version": {
@@ -1582,7 +1590,7 @@
                 "fr": "1.2.30",
                 "to": ""
             },
-            "add": " .weV_qxFz4gF5sPotO10y:has([for=\"desktop.settings.downloadQuality\"]) {display: none}"
+            "add": " .weV_qxFz4gF5sPotO10y, .BMtRRwqaJD_95vJFMFD0:has([for=\"desktop.settings.downloadQuality\"]) {display: none}"
         },
         "downloadicon": {
             "version": {
@@ -1712,6 +1720,14 @@
             },
             "match": "min:320,max:420",
             "replace": "min:250,max:400"
+        },
+        "filtertags_locale_fix": {
+            "version": {
+                "fr": "1.2.29",
+                "to": ""
+            },
+            "match": "(getTracksFilterTags.+?(.)=this._builder.build\\(\\)),",
+            "replace": "$1;$2.locale = 'en';const "
         }
     }
 }
