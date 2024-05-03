@@ -608,7 +608,7 @@ if (Test-Path -Path $hostsFilePath) {
             Write-Host ($lang).HostDel
 	    
             try {
-                $$hosts = $hosts | Where-Object { $_ -notmatch $regex }
+                $hosts = $hosts | Where-Object { $_ -notmatch $regex }
                 [System.IO.File]::WriteAllLines($hostsFilePath, $hosts)
             }
             catch {
