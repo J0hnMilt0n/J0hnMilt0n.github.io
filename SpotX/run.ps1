@@ -127,7 +127,7 @@ function Format-LanguageCode {
     
     
     $supportLanguages = @(
-        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk', 'ta', 'cs'
+        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk', 'ta'
     )
     
     
@@ -254,10 +254,6 @@ function Format-LanguageCode {
             $returnCode = 'ta'
             break
         }
-        '^cs' {
-            $returnCode = 'cs'
-            break
-        }
         Default {
             $returnCode = $PSUICulture
             $long_code = $true
@@ -366,7 +362,7 @@ if (!($version -and $version -match $match_v)) {
     }
     else {  
         # Recommended version for Win 10-12
-        $onlineFull = "1.2.36.959.g04bf500c-845"
+        $onlineFull = "1.2.35.663.gb699649e-6892"
     }
 }
 else {
@@ -614,9 +610,9 @@ if (Test-Path -Path $hostsFilePath) {
             }
         }
         else {
-            Write-Host ($lang).HostError -ForegroundColor Red
+            Write-Host ($lang).HostError`n -ForegroundColor Red
             $copyError = $Error[0]
-            Write-Host "Error: $($copyError.Exception.Message)" -ForegroundColor Red
+            Write-Host "Error: $($copyError.Exception.Message)`n" -ForegroundColor Red
         }
     }
 }
@@ -1281,7 +1277,7 @@ function Helper($paramname) {
             $contents = "dev-tools"
             $json = $webjson.others
 
-        }        
+        }
         "VariousofXpui-js" { 
 
             $VarJs = $webjson.VariousJs
@@ -1293,15 +1289,15 @@ function Helper($paramname) {
 
                     # Create a copy of 'dev-tools'
                     $newDevTools = $webjson.VariousJs.'dev-tools'.PSObject.Copy()
-                    
+
                     # Delete the first item and change the version
                     $newDevTools.match = $newDevTools.match[0], $newDevTools.match[2]
                     $newDevTools.replace = $newDevTools.replace[0], $newDevTools.replace[2]
                     $newDevTools.version.fr = '1.2.35'
-                    
+
                     # Assign a copy of 'devtools' to the 'devtools' property in $web json.others
                     $webjson.others | Add-Member -Name 'dev-tools' -Value $newDevTools -MemberType NoteProperty
-					
+
                     # leave only first item in $web json.Various Js.'devtools' match & replace
                     $webjson.VariousJs.'dev-tools'.match = $webjson.VariousJs.'dev-tools'.match[1]
                     $webjson.VariousJs.'dev-tools'.replace = $webjson.VariousJs.'dev-tools'.replace[1] 
@@ -1666,6 +1662,7 @@ If ($test_spa) {
         extract -counts 'one' -method 'zip' -name 'xpui-routes-desktop-settings.js' -helper 'Dev' 
     }
 
+
     # Hide Collaborators icon
     if (!($hide_col_icon_off) -and !($exp_spotify)) {
         extract -counts 'one' -method 'zip' -name 'xpui-routes-playlist.js' -helper 'Collaborators'
@@ -1787,7 +1784,7 @@ $ANSI = [Text.Encoding]::GetEncoding(1251)
 $old = [IO.File]::ReadAllText($spotifyExecutable, $ANSI)
 
 $rexex1 = $old -notmatch $webjson.others.binary.block_update.add
-$rexex2 = $old -notmatch $webjson.others.binary.block_slots.add
+$rexex2 = $old -notmatch $webjson.others.binary.podcast_ad_block.add
 $rexex3 = $old -notmatch $webjson.others.binary.block_gabo.add
 
 if ($rexex1 -and $rexex2 -and $rexex3) {
