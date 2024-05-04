@@ -614,9 +614,9 @@ if (Test-Path -Path $hostsFilePath) {
             }
         }
         else {
-            Write-Host ($lang).HostError`n -ForegroundColor Red
+            Write-Host ($lang).HostError -ForegroundColor Red
             $copyError = $Error[0]
-            Write-Host "Error: $($copyError.Exception.Message)`n" -ForegroundColor Red
+            Write-Host "Error: $($copyError.Exception.Message)" -ForegroundColor Red
         }
     }
 }
