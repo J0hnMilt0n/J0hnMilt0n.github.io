@@ -54,6 +54,9 @@ param
 
     [Parameter(HelpMessage = 'Enable top search bar.')]
     [switch]$topsearchbar,
+
+    [Parameter(HelpMessage = 'disable subfeed filter chips on home.')]
+    [switch]$homesub_off,
     
     [Parameter(HelpMessage = 'Do not hide the icon of collaborations in playlists.')]
     [switch]$hide_col_icon_off,
@@ -124,7 +127,7 @@ function Format-LanguageCode {
     
     
     $supportLanguages = @(
-        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk'
+        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk', 'ta', 'cs'
     )
     
     
@@ -247,6 +250,14 @@ function Format-LanguageCode {
             $returnCode = 'sk'
             break
         }
+        '^ta' {
+            $returnCode = 'ta'
+            break
+        }
+        '^cs' {
+            $returnCode = 'cs'
+            break
+        }
         Default {
             $returnCode = $PSUICulture
             $long_code = $true
@@ -287,10 +298,10 @@ if ($psv -ge 7) {
 
 function CallLang($clg) {
 
-    if ($mirror) {
-        $urlLang = "https://J0hnMilt0n.github.io/SpotX/scripts/installer-lang/$clg.ps1"
+    $urlLang = switch ($mirror) {
+        $true { "https://J0hnMilt0n.github.io/SpotX/scripts/installer-lang/$clg.ps1" }
+        default { "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/scripts/installer-lang/$clg.ps1" }
     }
-    else { $urlLang = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/scripts/installer-lang/$clg.ps1" }
     
     $ProgressPreference = 'SilentlyContinue'
     
@@ -306,23 +317,10 @@ function CallLang($clg) {
     }
 }
 
-
 # Set language code for script.
 $langCode = Format-LanguageCode -LanguageCode $Language
 
 $lang = CallLang -clg $langCode
-
-# Set variable 'ru'.
-if ($langCode -eq 'ru') { 
-    $ru = $true
-
-    if ($mirror) {
-        $urlru = "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json"
-    }
-    else { $urlru = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/Augmented%20translation/ru.json" }
-
-    $webjsonru = (Invoke-WebRequest -useb -Uri $urlru).Content | ConvertFrom-Json
-}
 
 Write-Host ($lang).Welcome
 Write-Host
@@ -385,6 +383,33 @@ else {
 }
 $online = ($onlineFull -split ".g")[0]
 
+
+function Get {
+    param (
+        [string]$Url,
+        [int]$MaxRetries = 3,
+        [int]$RetrySeconds = 3
+    )
+
+    $retries = 0
+
+    while ($retries -lt $MaxRetries) {
+        try {
+            return Invoke-RestMethod -Uri $Url
+        }
+        catch {
+            Write-Warning "Request failed: $_"
+            $retries++
+            Start-Sleep -Seconds $RetrySeconds
+        }
+    }
+    Write-Host
+    Write-Host "ERROR: " -ForegroundColor Red -NoNewline; Write-Host "Failed to retrieve data from $Url" -ForegroundColor White
+    Write-Host 
+
+    return $null
+
+}
 
 function incorrectValue {
 
@@ -533,7 +558,7 @@ taskkill /f /im Spotify.exe /t > $null 2>&1
 # Remove Spotify Windows Store If Any
 if ($win10 -or $win11 -or $win8_1 -or $win8 -or $win12) {
 
-    if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic -erroraction 'silentlycontinue') {
+    if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic) {
         Write-Host ($lang).MsSpoti`n
         
         if (!($confirm_uninstall_ms_spoti)) {
@@ -832,6 +857,23 @@ if ($no_shortcut) {
 
 $ch = $null
 
+
+# updated Russian translation
+if ($langCode -eq 'ru' -and [version]$offline -ge [version]"1.1.92.644") { 
+    
+    $urlru = switch ($mirror) {
+        $true { "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json" }
+        default { "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/Augmented%20translation/ru.json" }
+    }
+
+    $webjsonru = Get -Url $urlru
+
+    if ($webjsonru -ne $null) {
+
+        $ru = $true
+    }
+}
+
 if ($podcasts_off) { 
     Write-Host ($lang).PodcatsOff`n 
     $ch = 'y'
@@ -893,28 +935,15 @@ if ($ch -eq 'n') {
 $ch = $null
 
 
-if ($mirror) {
-
-    $url = "https://J0hnMilt0n.github.io/SpotX/patches/patches.json"
-}
-else { $url = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/patches.json" }
-
-$retries = 0
-
-while ($retries -lt 3) {
-    try {
-        $webjson = Invoke-WebRequest -UseBasicParsing -Uri $url | ConvertFrom-Json
-        break
-    }
-    catch {
-        Write-Warning "Request failed: $_"
-        $retries++
-        Start-Sleep -Seconds 3
-    }
+$url = switch ($mirror) {
+    $true { "https://J0hnMilt0n.github.io/SpotX/patches/patches.json" }
+    default { "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/patches.json" }
 }
 
-if ($retries -eq 3) {
-
+$webjson = Get -Url $url -RetrySeconds 5
+        
+if ($webjson -eq $null) { 
+    Write-Host
     Write-Host "Failed to get patches.json" -ForegroundColor Red
     Write-Host ($lang).StopScript
     $tempDirectory = $PWD
@@ -923,7 +952,10 @@ if ($retries -eq 3) {
     Remove-Item -Recurse -LiteralPath $tempDirectory 
     Pause
     Exit
+
 }
+
+
 function Helper($paramname) {
 
 
@@ -1100,16 +1132,21 @@ function Helper($paramname) {
                 }
              
             }
-            if ([version]$offline -eq [version]'1.2.30.1135') {  Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
+            if ([version]$offline -eq [version]'1.2.30.1135') { Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
 
             if (!($plus)) { Move-Json -n 'Plus' -t $Enable -f $Disable }
 
-            if (!($topsearchbar)){ 
+            if (!($topsearchbar)) { 
                 Move-Json -n "GlobalNavBar" -t $Enable -f $Disable 
                 $Custom.GlobalNavBar.value = "control"
             }
 
             if (!($funnyprogressbar)) { Move-Json -n 'HeBringsNpb' -t $Enable -f $Disable }
+
+            # disable subfeed filter chips on home
+            if ($homesub_off) { 
+                Move-Json -n "HomeSubfeeds" -t $Enable -f $Disable 
+            }
 
             # Old theme
             if (!($new_theme) -and [version]$offline -le [version]"1.2.13.661") {
@@ -1140,7 +1177,7 @@ function Helper($paramname) {
                     },
                     @{
                         Object           = $webjson.others.EnableExp.psobject.properties
-                        PropertiesToKeep = @('CarouselsOnHome', 'BrowseViaPathfinder')
+                        PropertiesToKeep = @('BrowseViaPathfinder', 'HomeViaGraphQLV2')
                     }
                 )
 
@@ -1213,21 +1250,6 @@ function Helper($paramname) {
             $contents = "ForcedExp"
             $json = $webjson.others
         }
-        "OffPodcasts" {  
-            # Turn off podcasts
-            if ([version]$offline -le [version]"1.1.92.647") { $contents = "podcastsoff" }
-            if ([version]$offline -ge [version]"1.1.93.896") { $contents = "podcastsoff2" }
-            $n = $js
-            $name = "patches.json.others."
-            $json = $webjson.others
-        }
-        "OffAdSections" {  
-            # Hiding Ad-like sections from the homepage
-            $n = $js
-            $name = "patches.json.others."
-            $contents = "adsectionsoff"
-            $json = $webjson.others
-        }
         "RuTranslate" { 
             # Additional translation of some words for the Russian language
             $n = "ru.json"
@@ -1252,11 +1274,39 @@ function Helper($paramname) {
             $contents = "collaboration"
             $json = $webjson.others
         }
+        "Dev" { 
+
+            $name = "patches.json.others."
+            $n = "xpui-routes-desktop-settings.js"
+            $contents = "dev-tools"
+            $json = $webjson.others
+
+        }        
         "VariousofXpui-js" { 
 
             $VarJs = $webjson.VariousJs
 
             if (!($devtools)) { Remove-Json -j $VarJs -p "dev-tools" }
+
+            else {
+                if ([version]$offline -ge [version]"1.2.35.663") {
+
+                    # Create a copy of 'dev-tools'
+                    $newDevTools = $webjson.VariousJs.'dev-tools'.PSObject.Copy()
+                    
+                    # Delete the first item and change the version
+                    $newDevTools.match = $newDevTools.match[0], $newDevTools.match[2]
+                    $newDevTools.replace = $newDevTools.replace[0], $newDevTools.replace[2]
+                    $newDevTools.version.fr = '1.2.35'
+                    
+                    # Assign a copy of 'devtools' to the 'devtools' property in $web json.others
+                    $webjson.others | Add-Member -Name 'dev-tools' -Value $newDevTools -MemberType NoteProperty
+					
+                    # leave only first item in $web json.Various Js.'devtools' match & replace
+                    $webjson.VariousJs.'dev-tools'.match = $webjson.VariousJs.'dev-tools'.match[1]
+                    $webjson.VariousJs.'dev-tools'.replace = $webjson.VariousJs.'dev-tools'.replace[1] 
+                }
+            }
 
             if ($urlform_goofy -and $idbox_goofy) {
                 $webjson.VariousJs.goofyhistory.replace = "`$1 const urlForm=" + '"' + $urlform_goofy + '"' + ";const idBox=" + '"' + $idbox_goofy + '"' + $webjson.VariousJs.goofyhistory.replace
@@ -1284,6 +1334,19 @@ function Helper($paramname) {
                 $webjson.VariousJs.product_state.replace = $repl -f "{pairs:{$adds}}"
             }
             else { Remove-Json -j $VarJs -p 'product_state' }
+
+            
+            if ($podcast_off -or $adsections_off) {
+                $type = switch ($true) {
+                    { $podcast_off -and $adsections_off } { "all" }
+                    { $podcast_off -and -not $adsections_off } { "podcast" }
+                    { -not $podcast_off -and $adsections_off } { "section" }
+                }
+                $webjson.VariousJs.block_section.replace = $webjson.VariousJs.block_section.replace -f $type
+            }
+            else {
+                Remove-Json -j $VarJs -p 'block_section'
+            }
 
             $name = "patches.json.VariousJs."
             $n = "xpui.js"
@@ -1370,7 +1433,7 @@ function extract ($counts, $method, $name, $helper, $add, $patch) {
             Add-Type -Assembly 'System.IO.Compression.FileSystem'
             $xpui_spa_patch = Join-Path (Join-Path $env:APPDATA 'Spotify\Apps') 'xpui.spa'
             $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update') 
-            $zip.Entries | Where-Object FullName -like $name | foreach {
+            $zip.Entries | Where-Object { $_.FullName -like $name -and $_.FullName.Split('/') -notcontains 'spotx-helper' } | foreach { 
                 $reader = New-Object System.IO.StreamReader($_.Open())
                 $xpui = $reader.ReadToEnd()
                 $reader.Close()
@@ -1390,6 +1453,79 @@ function extract ($counts, $method, $name, $helper, $add, $patch) {
         }
     }
 }
+
+function injection {
+    param(
+        [Alias("p")]
+        [string]$ArchivePath,
+
+        [Alias("f")]
+        [string]$FolderInArchive,
+
+        [Alias("n")]
+        [string]$FileName,
+
+        [Alias("c")]
+        [string]$FileContent
+    )
+
+    $folderPathInArchive = "$($FolderInArchive)/"
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archive = [System.IO.Compression.ZipFile]::Open($ArchivePath, 'Update')
+    $stream = $null
+    try {
+        $entry = $archive.GetEntry($folderPathInArchive + $FileName)
+        if ($entry -eq $null) {
+            $stream = $archive.CreateEntry($folderPathInArchive + $FileName).Open()
+        }
+        else {
+            $stream = $entry.Open()
+        }
+
+        $writer = [System.IO.StreamWriter]::new($stream)
+        $writer.Write($FileContent)
+
+        $writer.Dispose()
+        $stream.Dispose()
+
+        $indexEntry = $archive.Entries | Where-Object { $_.FullName -eq "index.html" }
+        if ($indexEntry -ne $null) {
+            $indexStream = $indexEntry.Open()
+            $reader = [System.IO.StreamReader]::new($indexStream)
+            $indexContent = $reader.ReadToEnd()
+            $reader.Dispose()
+            $indexStream.Dispose()
+
+            $scriptTagIndex = $indexContent.IndexOf("<script")
+
+            if ($scriptTagIndex -ge 0) {
+
+                $modifiedIndexContent = $indexContent.Insert($scriptTagIndex, "<script defer=`"defer`" src=`"/$FolderInArchive/$FileName`"></script>")
+
+                $indexEntry.Delete()
+                $newIndexEntry = $archive.CreateEntry("index.html").Open()
+                $indexWriter = [System.IO.StreamWriter]::new($newIndexEntry)
+                $indexWriter.Write($modifiedIndexContent)
+                $indexWriter.Dispose()
+                $newIndexEntry.Dispose()
+
+            }
+            else {
+                Write-Warning "<script tag was not found in the index.html file in the archive."
+            }
+        }
+        else {
+            Write-Warning "index.html not found in xpui.spa"
+        }
+    }
+    finally {
+        if ($archive -ne $null) {
+            $archive.Dispose()
+        }
+    }
+}
+
 
 Write-Host ($lang).ModSpoti`n
 
@@ -1504,20 +1640,30 @@ If ($test_spa) {
     # Forced exp
     extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'ForcedExp' -add $webjson.others.byspotx.add
     
-    extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'VariousofXpui-js' 
 
-    # Turn off podcasts
-    if ($podcast_off) { 
-        if ([version]$offline -ge [version]"1.1.93.896" -and [version]$offline -le [version]"1.1.97.962") { $js = 'home-v2.js' }
-        if ([version]$offline -le [version]"1.1.92.647" -or [version]$offline -ge [version]"1.1.98.683") { $js = 'xpui.js' }
-        extract -counts 'one' -method 'zip' -name $js -helper 'OffPodcasts'
+    # Hiding Ad-like sections or turn off podcasts from the homepage
+    if ($podcast_off -or $adsections_off) {
+
+        $url = switch ($mirror) {
+            $true { "https://spotx-official.github.io/SpotX/js-helper/sectionBlock.js" }
+            default { "https://raw.githubusercontent.com/SpotX-Official/SpotX/main/js-helper/sectionBlock.js" }
+        }
+        $section = Get -Url $url
+        
+        if ($section -ne $null) {
+
+            injection -p $xpui_spa_patch -f "spotx-helper" -n "sectionBlock.js" -c $section
+        }
+        else {
+            $podcast_off, $adsections_off = $false
+        }
     }
 
-    # Hiding Ad-like sections from the homepage
-    if ($adsections_off) { 
-        if ([version]$offline -ge [version]"1.1.93.896" -and [version]$offline -le [version]"1.1.97.962") { $js = 'home-v2.js' }
-        if ([version]$offline -ge [version]"1.1.98.683") { $js = 'xpui.js' }
-        extract -counts 'one' -method 'zip' -name $js -helper 'OffAdSections'
+
+    extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'VariousofXpui-js' 
+
+    if ($devtools -and [version]$offline -ge [version]"1.2.35.663") {
+        extract -counts 'one' -method 'zip' -name 'xpui-routes-desktop-settings.js' -helper 'Dev' 
     }
 
     # Hide Collaborators icon
@@ -1559,12 +1705,18 @@ If ($test_spa) {
 
     # xpui.css
     if (!($premium)) {
+        # Hide download block
+        if ([version]$offline -ge [version]"1.2.30.1135") {
+            $css += $webjson.others.downloadquality.add
+        }
         # Hide download icon on different pages
         $css += $webjson.others.downloadicon.add
         # Hide submenu item "download"
         $css += $webjson.others.submenudownload.add
         # Hide very high quality streaming
-        $css += $webjson.others.veryhighstream.add
+        if ([version]$offline -le [version]"1.2.29.605") {
+            $css += $webjson.others.veryhighstream.add
+        }
     }
     # Full screen lyrics
     if ($lyrics_stat -and [version]$offline -ge [version]"1.2.3.1107") {
@@ -1635,7 +1787,7 @@ $ANSI = [Text.Encoding]::GetEncoding(1251)
 $old = [IO.File]::ReadAllText($spotifyExecutable, $ANSI)
 
 $rexex1 = $old -notmatch $webjson.others.binary.block_update.add
-$rexex2 = $old -notmatch $webjson.others.binary.podcast_ad_block.add
+$rexex2 = $old -notmatch $webjson.others.binary.block_slots.add
 $rexex3 = $old -notmatch $webjson.others.binary.block_gabo.add
 
 if ($rexex1 -and $rexex2 -and $rexex3) {
