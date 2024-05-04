@@ -608,13 +608,13 @@ if (Test-Path -Path $hostsFilePath) {
             Write-Host ($lang).HostDel
             try {
                  $hosts = $hosts | Where-Object { $_ -notmatch $regex }
-                $hosts = $hosts | Where-Object { $_.trim() -ne "" }
+		 
                 [System.IO.File]::WriteAllLines($hostsFilePath, $hosts)
             }
             catch {
-                Write-Host ($lang).HostError -ForegroundColor Red
+                Write-Host ($lang).HostError`n -ForegroundColor Red
                 $copyError = $Error[0]
-                Write-Host "Error: $($copyError.Exception.Message)" -ForegroundColor Red
+                Write-Host "Error: $($copyError.Exception.Message)`n" -ForegroundColor Red
             }
         }
         else {
