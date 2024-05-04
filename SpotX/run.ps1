@@ -593,9 +593,9 @@ $hostsBackupFilePath = Join-Path $Env:windir 'System32\Drivers\Etc\hosts.bak'
 
 if (Test-Path -Path $hostsFilePath) {
     $hosts = [System.IO.File]::ReadAllLines($hostsFilePath)
-        Write-Host ($lang).HostInfo
+        
     $regex = "^(?!#|\|)((?:.*?(?:download|upgrade)\.scdn\.co|.*?spotify).*)"
-        Write-Host ($lang).HostBak
+        
 
     if ($hosts -match $regex) {
 
