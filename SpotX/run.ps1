@@ -54,6 +54,9 @@ param
 
     [Parameter(HelpMessage = 'Enable top search bar.')]
     [switch]$topsearchbar,
+
+    [Parameter(HelpMessage = 'disable subfeed filter chips on home.')]
+    [switch]$homesub_off,
     
     [Parameter(HelpMessage = 'Do not hide the icon of collaborations in playlists.')]
     [switch]$hide_col_icon_off,
@@ -124,7 +127,7 @@ function Format-LanguageCode {
     
     
     $supportLanguages = @(
-        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk'
+        'en', 'ru', 'it', 'tr', 'ka', 'pl', 'es', 'fr', 'hi', 'pt', 'id', 'vi', 'ro', 'de', 'hu', 'zh', 'zh-TW', 'ko', 'ua', 'fa', 'sr', 'lv', 'bn', 'el', 'fi', 'ja', 'fil', 'sv', 'sk', 'ta', 'cs'
     )
     
     
@@ -245,6 +248,14 @@ function Format-LanguageCode {
         }        
         '^sk' {
             $returnCode = 'sk'
+            break
+        }
+        '^ta' {
+            $returnCode = 'ta'
+            break
+        }
+        '^cs' {
+            $returnCode = 'cs'
             break
         }
         Default {
@@ -1111,6 +1122,11 @@ function Helper($paramname) {
 
             if (!($funnyprogressbar)) { Move-Json -n 'HeBringsNpb' -t $Enable -f $Disable }
 
+             # disable subfeed filter chips on home
+            if ($homesub_off) { 
+                Move-Json -n "HomeSubfeeds" -t $Enable -f $Disable 
+            }
+
             # Old theme
             if (!($new_theme) -and [version]$offline -le [version]"1.2.13.661") {
 
@@ -1140,7 +1156,7 @@ function Helper($paramname) {
                     },
                     @{
                         Object           = $webjson.others.EnableExp.psobject.properties
-                        PropertiesToKeep = @('CarouselsOnHome', 'BrowseViaPathfinder')
+                        PropertiesToKeep = @('BrowseViaPathfinder', 'HomeViaGraphQLV2')
                     }
                 )
 
@@ -1213,21 +1229,7 @@ function Helper($paramname) {
             $contents = "ForcedExp"
             $json = $webjson.others
         }
-        "OffPodcasts" {  
-            # Turn off podcasts
-            if ([version]$offline -le [version]"1.1.92.647") { $contents = "podcastsoff" }
-            if ([version]$offline -ge [version]"1.1.93.896") { $contents = "podcastsoff2" }
-            $n = $js
-            $name = "patches.json.others."
-            $json = $webjson.others
-        }
-        "OffAdSections" {  
-            # Hiding Ad-like sections from the homepage
-            $n = $js
-            $name = "patches.json.others."
-            $contents = "adsectionsoff"
-            $json = $webjson.others
-        }
+       
         "RuTranslate" { 
             # Additional translation of some words for the Russian language
             $n = "ru.json"
@@ -1252,11 +1254,39 @@ function Helper($paramname) {
             $contents = "collaboration"
             $json = $webjson.others
         }
+        "Dev" { 
+
+            $name = "patches.json.others."
+            $n = "xpui-routes-desktop-settings.js"
+            $contents = "dev-tools"
+            $json = $webjson.others
+
+        } 
         "VariousofXpui-js" { 
 
             $VarJs = $webjson.VariousJs
 
             if (!($devtools)) { Remove-Json -j $VarJs -p "dev-tools" }
+
+            else {
+                if ([version]$offline -ge [version]"1.2.35.663") {
+
+                    # Create a copy of 'dev-tools'
+                    $newDevTools = $webjson.VariousJs.'dev-tools'.PSObject.Copy()
+
+                    # Delete the first item and change the version
+                    $newDevTools.match = $newDevTools.match[0], $newDevTools.match[2]
+                    $newDevTools.replace = $newDevTools.replace[0], $newDevTools.replace[2]
+                    $newDevTools.version.fr = '1.2.35'
+
+                    # Assign a copy of 'devtools' to the 'devtools' property in $web json.others
+                    $webjson.others | Add-Member -Name 'dev-tools' -Value $newDevTools -MemberType NoteProperty
+
+                    # leave only first item in $web json.Various Js.'devtools' match & replace
+                    $webjson.VariousJs.'dev-tools'.match = $webjson.VariousJs.'dev-tools'.match[1]
+                    $webjson.VariousJs.'dev-tools'.replace = $webjson.VariousJs.'dev-tools'.replace[1] 
+                }
+            }
 
             if ($urlform_goofy -and $idbox_goofy) {
                 $webjson.VariousJs.goofyhistory.replace = "`$1 const urlForm=" + '"' + $urlform_goofy + '"' + ";const idBox=" + '"' + $idbox_goofy + '"' + $webjson.VariousJs.goofyhistory.replace
@@ -1504,20 +1534,30 @@ If ($test_spa) {
     # Forced exp
     extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'ForcedExp' -add $webjson.others.byspotx.add
     
-    extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'VariousofXpui-js' 
 
-    # Turn off podcasts
-    if ($podcast_off) { 
-        if ([version]$offline -ge [version]"1.1.93.896" -and [version]$offline -le [version]"1.1.97.962") { $js = 'home-v2.js' }
-        if ([version]$offline -le [version]"1.1.92.647" -or [version]$offline -ge [version]"1.1.98.683") { $js = 'xpui.js' }
-        extract -counts 'one' -method 'zip' -name $js -helper 'OffPodcasts'
+
+    # Hiding Ad-like sections or turn off podcasts from the homepage
+    if ($podcast_off -or $adsections_off) {
+
+        $url = switch ($mirror) {
+            $true { "https://spotx-official.github.io/SpotX/js-helper/sectionBlock.js" }
+            default { "https://raw.githubusercontent.com/SpotX-Official/SpotX/main/js-helper/sectionBlock.js" }
+        }
+        $section = Get -Url $url
+
+        if ($section -ne $null) {
+
+            injection -p $xpui_spa_patch -f "spotx-helper" -n "sectionBlock.js" -c $section
+        }
+        else {
+            $podcast_off, $adsections_off = $false
+        }
     }
 
-    # Hiding Ad-like sections from the homepage
-    if ($adsections_off) { 
-        if ([version]$offline -ge [version]"1.1.93.896" -and [version]$offline -le [version]"1.1.97.962") { $js = 'home-v2.js' }
-        if ([version]$offline -ge [version]"1.1.98.683") { $js = 'xpui.js' }
-        extract -counts 'one' -method 'zip' -name $js -helper 'OffAdSections'
+    extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'VariousofXpui-js' 
+
+    if ($devtools -and [version]$offline -ge [version]"1.2.35.663") {
+        extract -counts 'one' -method 'zip' -name 'xpui-routes-desktop-settings.js' -helper 'Dev' 
     }
 
     # Hide Collaborators icon
@@ -1559,12 +1599,18 @@ If ($test_spa) {
 
     # xpui.css
     if (!($premium)) {
+    # Hide download block
+        if ([version]$offline -ge [version]"1.2.30.1135") {
+            $css += $webjson.others.downloadquality.add
+        }
         # Hide download icon on different pages
         $css += $webjson.others.downloadicon.add
         # Hide submenu item "download"
         $css += $webjson.others.submenudownload.add
         # Hide very high quality streaming
-        $css += $webjson.others.veryhighstream.add
+        if ([version]$offline -le [version]"1.2.29.605") {
+            $css += $webjson.others.veryhighstream.add
+        }
     }
     # Full screen lyrics
     if ($lyrics_stat -and [version]$offline -ge [version]"1.2.3.1107") {
@@ -1635,7 +1681,7 @@ $ANSI = [Text.Encoding]::GetEncoding(1251)
 $old = [IO.File]::ReadAllText($spotifyExecutable, $ANSI)
 
 $rexex1 = $old -notmatch $webjson.others.binary.block_update.add
-$rexex2 = $old -notmatch $webjson.others.binary.podcast_ad_block.add
+$rexex2 = $old -notmatch $webjson.others.binary.block_slots.add
 $rexex3 = $old -notmatch $webjson.others.binary.block_gabo.add
 
 if ($rexex1 -and $rexex2 -and $rexex3) {
