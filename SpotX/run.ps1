@@ -1315,6 +1315,18 @@ function Helper($paramname) {
             }
             else { Remove-Json -j $VarJs -p 'product_state' }
 
+            if ($podcast_off -or $adsections_off) {
+                $type = switch ($true) {
+                    { $podcast_off -and $adsections_off } { "all" }
+                    { $podcast_off -and -not $adsections_off } { "podcast" }
+                    { -not $podcast_off -and $adsections_off } { "section" }
+                }
+                $webjson.VariousJs.block_section.replace = $webjson.VariousJs.block_section.replace -f $type
+            }
+            else {
+                Remove-Json -j $VarJs -p 'block_section'
+            }
+
             $name = "patches.json.VariousJs."
             $n = "xpui.js"
             $contents = $webjson.VariousJs.psobject.properties.name
@@ -1400,7 +1412,7 @@ function extract ($counts, $method, $name, $helper, $add, $patch) {
             Add-Type -Assembly 'System.IO.Compression.FileSystem'
             $xpui_spa_patch = Join-Path (Join-Path $env:APPDATA 'Spotify\Apps') 'xpui.spa'
             $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update') 
-            $zip.Entries | Where-Object FullName -like $name | foreach {
+             $zip.Entries | Where-Object { $_.FullName -like $name -and $_.FullName.Split('/') -notcontains 'spotx-helper' } | foreach { 
                 $reader = New-Object System.IO.StreamReader($_.Open())
                 $xpui = $reader.ReadToEnd()
                 $reader.Close()
