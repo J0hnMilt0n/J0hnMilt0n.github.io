@@ -1315,17 +1315,7 @@ function Helper($paramname) {
             }
             else { Remove-Json -j $VarJs -p 'product_state' }
 
-            if ($podcast_off -or $adsections_off) {
-                $type = switch ($true) {
-                    { $podcast_off -and $adsections_off } { "all" }
-                    { $podcast_off -and -not $adsections_off } { "podcast" }
-                    { -not $podcast_off -and $adsections_off } { "section" }
-                }
-                $webjson.VariousJs.block_section.replace = $webjson.VariousJs.block_section.replace -f $type
-            }
-            else {
-                Remove-Json -j $VarJs -p 'block_section'
-            }
+            
 
             $name = "patches.json.VariousJs."
             $n = "xpui.js"
