@@ -47,7 +47,7 @@ todo:
 	}
 
 	// Update Colorschemes
-	fetch("https://raw.githubusercontent.com/Comfy-Themes/J0hnMilt0n/main/Comfy/color.ini")
+	fetch("https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/spotify/theme/color.ini")
 		.then(response => response.text())
 		.then(iniContent => {
 			setConfig("Color-Schemes", parseIni(iniContent), "Successfully updated color schemes");
