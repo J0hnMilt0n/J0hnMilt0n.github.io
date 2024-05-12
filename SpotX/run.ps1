@@ -1461,26 +1461,6 @@ if ($test_spa -and $test_js) {
     Exit
 }
 
-if ($test_js) {
-    # continue even if spicetify installed
-    continue
-    do {
-        $ch = Read-Host -Prompt ($lang).Spicetify
-        Write-Host
-        if (!($ch -eq 'n' -or $ch -eq 'y')) { incorrectValue }
-    }
-    while ($ch -notmatch '^y$|^n$')
-
-    if ($ch -eq 'y') { 
-        $Url = "https://telegra.ph/SpotX-FAQ-09-19#Can-I-use-SpotX-and-Spicetify-together?"
-        Start-Process $Url
-    }
-
-    Write-Host ($lang).StopScript
-    Pause
-    Exit
-}  
-
 if (!($test_js) -and !($test_spa)) { 
     Write-Host "xpui.spa not found, reinstall Spotify"
     Write-Host ($lang).StopScript
