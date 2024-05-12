@@ -13,7 +13,7 @@ todo:
 
 (async function comfy() {
 	// Block Until Mass Usage Deps Loaded
-	if (!(J0hnMilt0n.React && J0hnMilt0n.ReactDOM && J0hnMilt0n.Config)) {
+	if (!(Spicetify.React && Spicetify.ReactDOM && Spicetify.Config)) {
 		setTimeout(comfy, 10);
 		return;
 	}
@@ -33,7 +33,7 @@ todo:
 
 	// Initialize Config
 	let config = JSON.parse(localStorage.getItem("comfy:config") || "{}");
-	let configScheme = J0hnMilt0n.Config?.color_scheme || "Comfy";
+	let configScheme = Spicetify.Config?.color_scheme || "Comfy";
 	let preloadedScheme = false;
 	let startup = true;
 	let preloadContainer = document.createElement("div");
@@ -47,7 +47,7 @@ todo:
 	}
 
 	// Update Colorschemes
-	fetch("https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/spotify/theme/color.ini")
+	fetch("https://raw.githubusercontent.com/Comfy-Themes/Spicetify/main/Comfy/color.ini")
 		.then(response => response.text())
 		.then(iniContent => {
 			setConfig("Color-Schemes", parseIni(iniContent), "Successfully updated color schemes");
@@ -124,22 +124,22 @@ todo:
 		},
 		true
 	);
-	waitForDeps("J0hnMilt0n.Platform.History", () => J0hnMilt0n.Platform.History.listen(updateBanner));
-	waitForDeps("J0hnMilt0n.Player", () => J0hnMilt0n.Player.addEventListener("songchange", updateBanner));
+	waitForDeps("Spicetify.Platform.History", () => Spicetify.Platform.History.listen(updateBanner));
+	waitForDeps("Spicetify.Player", () => Spicetify.Player.addEventListener("songchange", updateBanner));
 	updateBanner();
 
 	// React components
-	const Dialog = J0hnMilt0n.React.memo(props => {
-		const [state, setState] = J0hnMilt0n.React.useState(true);
+	const Dialog = Spicetify.React.memo(props => {
+		const [state, setState] = Spicetify.React.useState(true);
 		const self = document.querySelector(".ReactModalPortal:last-of-type");
 
-		J0hnMilt0n.React.useEffect(() => {
+		Spicetify.React.useEffect(() => {
 			if (state) {
 				props.onOpen?.();
 			}
 		}, [state]);
 
-		return J0hnMilt0n.ReactComponent.ConfirmDialog({
+		return Spicetify.ReactComponent.ConfirmDialog({
 			...props,
 			isOpen: state,
 			onClose: () => {
@@ -162,17 +162,17 @@ todo:
 
 		return (
 			filter &&
-			J0hnMilt0n.React.createElement(
-				J0hnMilt0n.React.Fragment,
+			Spicetify.React.createElement(
+				Spicetify.React.Fragment,
 				null,
-				J0hnMilt0n.React.createElement(
+				Spicetify.React.createElement(
 					"div",
 					{ className: "setting-section", id: name },
-					J0hnMilt0n.React.createElement("h2", { className: "setting-header" }, name),
+					Spicetify.React.createElement("h2", { className: "setting-header" }, name),
 					children.map(child =>
-						J0hnMilt0n.React.createElement(child.type, {
+						Spicetify.React.createElement(child.type, {
 							...child,
-							tippy: J0hnMilt0n.React.createElement(Tippy, { label: child.tippy })
+							tippy: Spicetify.React.createElement(Tippy, { label: child.tippy })
 						})
 					)
 				)
@@ -181,16 +181,16 @@ todo:
 	};
 
 	const Row = ({ name, items }) => {
-		return J0hnMilt0n.React.createElement(
-			J0hnMilt0n.React.Fragment,
+		return Spicetify.React.createElement(
+			Spicetify.React.Fragment,
 			null,
-			J0hnMilt0n.React.createElement(
+			Spicetify.React.createElement(
 				"div",
 				{ className: name },
 				items.map(item =>
-					J0hnMilt0n.React.createElement(item.type, {
+					Spicetify.React.createElement(item.type, {
 						...item,
-						tippy: J0hnMilt0n.React.createElement(Tippy, { label: item.tippy })
+						tippy: Spicetify.React.createElement(Tippy, { label: item.tippy })
 					})
 				)
 			)
@@ -198,11 +198,11 @@ todo:
 	};
 
 	const Button = ({ name, title, condition = true, callback }) => {
-		const [state, setState] = J0hnMilt0n.React.useState(title);
+		const [state, setState] = Spicetify.React.useState(title);
 
 		if (condition === false) return;
 
-		return J0hnMilt0n.React.createElement(
+		return Spicetify.React.createElement(
 			"button",
 			{
 				className: "main-buttons-button main-button-secondary",
@@ -215,38 +215,38 @@ todo:
 		);
 	};
 
-	const CardLayout = J0hnMilt0n.React.memo(({ title, desc, tippy, action, onClick }) => {
-		return J0hnMilt0n.React.createElement(
+	const CardLayout = Spicetify.React.memo(({ title, desc, tippy, action, onClick }) => {
+		return Spicetify.React.createElement(
 			"div",
 			{ className: "setting-card" },
-			J0hnMilt0n.React.createElement(
+			Spicetify.React.createElement(
 				"div",
 				{ className: "setting-container", onClick: onClick },
-				J0hnMilt0n.React.createElement(
+				Spicetify.React.createElement(
 					"div",
 					{ className: "setting-item" },
-					J0hnMilt0n.React.createElement("label", { className: "setting-title" }, title, tippy),
-					J0hnMilt0n.React.createElement("div", { className: "setting-action" }, action)
+					Spicetify.React.createElement("label", { className: "setting-title" }, title, tippy),
+					Spicetify.React.createElement("div", { className: "setting-action" }, action)
 				),
-				J0hnMilt0n.React.createElement("div", { className: "setting-description" }, desc),
-				desc && J0hnMilt0n.React.createElement("div", { className: "setting-description-spacer" })
+				Spicetify.React.createElement("div", { className: "setting-description" }, desc),
+				desc && Spicetify.React.createElement("div", { className: "setting-description-spacer" })
 			)
 		);
 	});
 
-	const SubSection = J0hnMilt0n.React.memo(({ name, condition = true, items, collapseItems: initialCollapseItems = false, callback, ...props }) => {
-		const [state, setState] = J0hnMilt0n.React.useState(getConfig(name) ?? true);
-		const [collapseItems, setCollapseItems] = J0hnMilt0n.React.useState(getConfig(`${name}-Collapsed`) ?? initialCollapseItems);
+	const SubSection = Spicetify.React.memo(({ name, condition = true, items, collapseItems: initialCollapseItems = false, callback, ...props }) => {
+		const [state, setState] = Spicetify.React.useState(getConfig(name) ?? true);
+		const [collapseItems, setCollapseItems] = Spicetify.React.useState(getConfig(`${name}-Collapsed`) ?? initialCollapseItems);
 
 		if (condition === false) return null;
 
-		return J0hnMilt0n.React.createElement(
-			J0hnMilt0n.React.Fragment,
+		return Spicetify.React.createElement(
+			Spicetify.React.Fragment,
 			null,
-			J0hnMilt0n.React.createElement(
+			Spicetify.React.createElement(
 				"div",
 				{ className: "setting-subSection", id: state ? (collapseItems ? "collapsed" : "enabled") : "disabled" },
-				J0hnMilt0n.React.createElement(Slider, {
+				Spicetify.React.createElement(Slider, {
 					name,
 					callback: value => {
 						callback?.(value);
@@ -287,9 +287,9 @@ todo:
 					!collapseItems &&
 					!startup &&
 					items.map(item =>
-						J0hnMilt0n.React.createElement(item.type, {
+						Spicetify.React.createElement(item.type, {
 							...item,
-							tippy: J0hnMilt0n.React.createElement(Tippy, { label: item.tippy })
+							tippy: Spicetify.React.createElement(Tippy, { label: item.tippy })
 						})
 					)
 			)
@@ -298,23 +298,23 @@ todo:
 
 	const Tippy = ({ label }) => {
 		if (!label) return null;
-		return J0hnMilt0n.React.createElement(
-			J0hnMilt0n.ReactComponent.TooltipWrapper,
+		return Spicetify.React.createElement(
+			Spicetify.ReactComponent.TooltipWrapper,
 			{
 				label,
 				showDelay: 0,
 				placement: "left",
 				trigger: "mouseenter"
 			},
-			J0hnMilt0n.React.createElement(
+			Spicetify.React.createElement(
 				"div",
 				{ className: "x-settings-tooltip" },
-				J0hnMilt0n.React.createElement(
+				Spicetify.React.createElement(
 					"div",
 					{
 						className: "x-settings-tooltipIconWrapper"
 					},
-					J0hnMilt0n.React.createElement(
+					Spicetify.React.createElement(
 						"svg",
 						{
 							role: "img",
@@ -324,10 +324,10 @@ todo:
 							className: "Svg-sc-ytk21e-0 Svg-img-icon x-settings-tooltipIcon",
 							viewBox: "0 0 16 16"
 						},
-						J0hnMilt0n.React.createElement("path", {
+						Spicetify.React.createElement("path", {
 							d: "M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"
 						}),
-						J0hnMilt0n.React.createElement("path", {
+						Spicetify.React.createElement("path", {
 							d: "M7.25 12.026v-1.5h1.5v1.5h-1.5zm.884-7.096A1.125 1.125 0 0 0 7.06 6.39l-1.431.448a2.625 2.625 0 1 1 5.13-.784c0 .54-.156 1.015-.503 1.488-.3.408-.7.652-.973.818l-.112.068c-.185.116-.26.203-.302.283-.046.087-.097.245-.097.57h-1.5c0-.47.072-.898.274-1.277.206-.385.507-.645.827-.846l.147-.092c.285-.177.413-.257.526-.41.169-.23.213-.397.213-.602 0-.622-.503-1.125-1.125-1.125z"
 						})
 					)
@@ -336,11 +336,11 @@ todo:
 		);
 	};
 
-	const Slider = J0hnMilt0n.React.memo(({ name, title, desc, tippy, defaultVal, condition = true, callback, onClick }) => {
-		const [state, setState] = J0hnMilt0n.React.useState(getConfig(name) ?? defaultVal);
-		const isFirstRender = J0hnMilt0n.React.useRef(true);
+	const Slider = Spicetify.React.memo(({ name, title, desc, tippy, defaultVal, condition = true, callback, onClick }) => {
+		const [state, setState] = Spicetify.React.useState(getConfig(name) ?? defaultVal);
+		const isFirstRender = Spicetify.React.useRef(true);
 
-		J0hnMilt0n.React.useEffect(() => {
+		Spicetify.React.useEffect(() => {
 			if (isFirstRender.current) {
 				isFirstRender.current = false;
 				if (!startup) return;
@@ -363,11 +363,11 @@ todo:
 
 		if (condition === false) return null;
 
-		return J0hnMilt0n.React.createElement(CardLayout, {
+		return Spicetify.React.createElement(CardLayout, {
 			title,
 			desc,
 			tippy,
-			action: J0hnMilt0n.React.createElement(J0hnMilt0n.ReactComponent.Toggle, {
+			action: Spicetify.React.createElement(Spicetify.ReactComponent.Toggle, {
 				value: state,
 				disabled: false,
 				onSelected: () => {
@@ -378,14 +378,14 @@ todo:
 		});
 	});
 
-	const Input = J0hnMilt0n.React.memo(
+	const Input = Spicetify.React.memo(
 		({ inputType, includePicker, name, title, desc, min, max, step, tippy, defaultVal, condition = true, callback }) => {
-			const [value, setValue] = J0hnMilt0n.React.useState(getConfig(name) ?? "");
-			const [defaultState, setDefaultState] = J0hnMilt0n.React.useState(defaultVal);
-			const isFirstRender = J0hnMilt0n.React.useRef(true);
-			const textFieldRef = J0hnMilt0n.React.useRef(null);
+			const [value, setValue] = Spicetify.React.useState(getConfig(name) ?? "");
+			const [defaultState, setDefaultState] = Spicetify.React.useState(defaultVal);
+			const isFirstRender = Spicetify.React.useRef(true);
+			const textFieldRef = Spicetify.React.useRef(null);
 
-			J0hnMilt0n.React.useEffect(() => {
+			Spicetify.React.useEffect(() => {
 				if (textFieldRef.current) {
 					textFieldRef.current.addEventListener(
 						"wheel",
@@ -399,11 +399,11 @@ todo:
 				}
 			}, []);
 
-			J0hnMilt0n.React.useEffect(() => {
+			Spicetify.React.useEffect(() => {
 				if (isPromise(defaultVal)) defaultVal.then(val => setDefaultState(val));
 			}, [defaultVal]);
 
-			J0hnMilt0n.React.useEffect(() => {
+			Spicetify.React.useEffect(() => {
 				if (isFirstRender.current) {
 					isFirstRender.current = false;
 					if (!startup) return;
@@ -418,12 +418,12 @@ todo:
 
 			if (condition === false) return null;
 
-			return J0hnMilt0n.React.createElement(CardLayout, {
+			return Spicetify.React.createElement(CardLayout, {
 				title,
 				desc,
 				tippy,
 				action: [
-					J0hnMilt0n.React.createElement("input", {
+					Spicetify.React.createElement("input", {
 						type: inputType,
 						className: "input",
 						ref: textFieldRef,
@@ -435,7 +435,7 @@ todo:
 						onChange: e => setValue(e.target.value)
 					}),
 					includePicker &&
-						J0hnMilt0n.React.createElement("input", {
+						Spicetify.React.createElement("input", {
 							type: "color",
 							className: "input",
 							value,
@@ -447,17 +447,17 @@ todo:
 		}
 	);
 
-	const Dropdown = J0hnMilt0n.React.memo(({ name, title, desc, options, defaultVal, condition = true, tippy, callback }) => {
+	const Dropdown = Spicetify.React.memo(({ name, title, desc, options, defaultVal, condition = true, tippy, callback }) => {
 		if (!condition) return null;
 		if (!defaultVal) defaultVal = "Select an option";
 		if (typeof options === "function") options = options();
 
-		const [selectedValue, setSelectedValue] = J0hnMilt0n.React.useState(getConfig(name) ?? defaultVal);
-		const [buttonEnabled, setButtonEnabled] = J0hnMilt0n.React.useState(selectedValue !== defaultVal);
-		const [menuOpen, setMenuOpen] = J0hnMilt0n.React.useState(false);
-		const isFirstRender = J0hnMilt0n.React.useRef(true);
+		const [selectedValue, setSelectedValue] = Spicetify.React.useState(getConfig(name) ?? defaultVal);
+		const [buttonEnabled, setButtonEnabled] = Spicetify.React.useState(selectedValue !== defaultVal);
+		const [menuOpen, setMenuOpen] = Spicetify.React.useState(false);
+		const isFirstRender = Spicetify.React.useRef(true);
 
-		J0hnMilt0n.React.useEffect(() => {
+		Spicetify.React.useEffect(() => {
 			if (isFirstRender.current) {
 				isFirstRender.current = false;
 				if (!startup) {
@@ -480,13 +480,13 @@ todo:
 			}
 		}, [selectedValue]);
 
-		return J0hnMilt0n.React.createElement(CardLayout, {
+		return Spicetify.React.createElement(CardLayout, {
 			title,
 			desc,
 			tippy,
 			action: [
 				buttonEnabled &&
-					J0hnMilt0n.React.createElement(
+					Spicetify.React.createElement(
 						"button",
 						{
 							className: `switch`,
@@ -495,35 +495,35 @@ todo:
 								setSelectedValue(defaultVal);
 							}
 						},
-						J0hnMilt0n.React.createElement("svg", {
+						Spicetify.React.createElement("svg", {
 							height: "16",
 							width: "16",
 							viewBox: "0 0 16 16",
 							fill: "currentColor",
 							dangerouslySetInnerHTML: {
-								__html: J0hnMilt0n.SVGIcons.x
+								__html: Spicetify.SVGIcons.x
 							}
 						})
 					),
-				J0hnMilt0n.React.createElement(
+				Spicetify.React.createElement(
 					"div",
 					{ className: `dropdown-wrapper main-type-mestoBold ${menuOpen ? "menu-open" : ""}`, id: name },
-					J0hnMilt0n.React.createElement(
+					Spicetify.React.createElement(
 						"div",
 						{ className: "dropdown-button", onClick: () => setMenuOpen(!menuOpen) },
-						J0hnMilt0n.React.createElement("div", { className: "dropdown-selection" }, selectedValue),
-						J0hnMilt0n.React.createElement(
+						Spicetify.React.createElement("div", { className: "dropdown-selection" }, selectedValue),
+						Spicetify.React.createElement(
 							"div",
 							{ className: "dropdown-arrow-wrapper" },
-							J0hnMilt0n.React.createElement("span", { className: "dropdown-arrow" })
+							Spicetify.React.createElement("span", { className: "dropdown-arrow" })
 						)
 					),
 					menuOpen &&
-						J0hnMilt0n.React.createElement(
+						Spicetify.React.createElement(
 							"div",
 							{ className: "dropdown-menu" },
 							options.map(option =>
-								J0hnMilt0n.React.createElement(
+								Spicetify.React.createElement(
 									"div",
 									{
 										key: option,
@@ -546,12 +546,12 @@ todo:
 	});
 
 	const Carousel = ({ chips, checked, setChecked }) => {
-		const containerRef = J0hnMilt0n.React.useRef(null);
-		const [showLeftButton, setShowLeftButton] = J0hnMilt0n.React.useState(false);
-		const [showRightButton, setShowRightButton] = J0hnMilt0n.React.useState(false);
+		const containerRef = Spicetify.React.useRef(null);
+		const [showLeftButton, setShowLeftButton] = Spicetify.React.useState(false);
+		const [showRightButton, setShowRightButton] = Spicetify.React.useState(false);
 		const section = document.querySelector(".main-trackCreditsModal-mainSection");
 
-		const handleResize = J0hnMilt0n.React.useCallback(() => {
+		const handleResize = Spicetify.React.useCallback(() => {
 			if (!containerRef.current) return;
 
 			const container = containerRef.current;
@@ -559,20 +559,20 @@ todo:
 			setShowRightButton(container.scrollLeft <= container.scrollWidth - container.clientWidth - 32);
 		}, []);
 
-		J0hnMilt0n.React.useEffect(() => {
+		Spicetify.React.useEffect(() => {
 			window.addEventListener("resize", handleResize);
 			return () => {
 				window.removeEventListener("resize", handleResize);
 			};
 		}, [handleResize]);
 
-		J0hnMilt0n.React.useEffect(handleResize, [chips.length]);
+		Spicetify.React.useEffect(handleResize, [chips.length]);
 
-		const handleScroll = J0hnMilt0n.React.useCallback(() => {
+		const handleScroll = Spicetify.React.useCallback(() => {
 			handleResize();
 		}, [handleResize]);
 
-		const handleKeyDown = J0hnMilt0n.React.useCallback(
+		const handleKeyDown = Spicetify.React.useCallback(
 			event => {
 				let newIndex;
 				let startingIndex = checked.index;
@@ -624,23 +624,23 @@ todo:
 			}
 		};
 
-		return J0hnMilt0n.React.createElement(
+		return Spicetify.React.createElement(
 			"div",
 			{ className: "search-searchCategory-SearchCategory encore-dark-theme" },
-			J0hnMilt0n.React.createElement(
+			Spicetify.React.createElement(
 				"div",
 				{ className: "search-searchCategory-container contentSpacing" },
-				J0hnMilt0n.React.createElement(
+				Spicetify.React.createElement(
 					"div",
 					{ className: "search-searchCategory-wrapper" },
-					J0hnMilt0n.React.createElement(
+					Spicetify.React.createElement(
 						"div",
 						{ className: "search-searchCategory-contentArea" },
-						J0hnMilt0n.React.createElement(
+						Spicetify.React.createElement(
 							"div",
 							{
 								ref: containerRef,
-								className: J0hnMilt0n.classnames("search-searchCategory-catergoryGrid", {
+								className: Spicetify.classnames("search-searchCategory-catergoryGrid", {
 									MUloQuW1xQawwVs0mDp4: showLeftButton,
 									OlnSvEViCZ_vVdnc3mSQ: showRightButton,
 									FjMPyh7lOujDVYQRvp0H: showRightButton && showLeftButton
@@ -650,11 +650,11 @@ todo:
 								role: "list",
 								tabIndex: 0
 							},
-							J0hnMilt0n.React.createElement(
+							Spicetify.React.createElement(
 								"div",
 								{ role: "presentation" },
 								chips.map((chip, index) =>
-									J0hnMilt0n.React.createElement(
+									Spicetify.React.createElement(
 										"a",
 										{
 											key: index,
@@ -663,8 +663,8 @@ todo:
 											tabIndex: "-1",
 											onClick: () => clickCallback(index, chip.label)
 										},
-										J0hnMilt0n.React.createElement(
-											J0hnMilt0n.ReactComponent.Chip,
+										Spicetify.React.createElement(
+											Spicetify.ReactComponent.Chip,
 											{
 												isUsingKeyboard: false,
 												onClick: () => clickCallback(index, chip.label),
@@ -678,41 +678,41 @@ todo:
 								)
 							)
 						),
-						J0hnMilt0n.React.createElement(
+						Spicetify.React.createElement(
 							"div",
 							{ className: "search-searchCategory-carousel", dir: "ltr" },
-							J0hnMilt0n.React.createElement(
+							Spicetify.React.createElement(
 								"button",
 								{
-									className: J0hnMilt0n.classnames("search-searchCategory-carouselButton", {
+									className: Spicetify.classnames("search-searchCategory-carouselButton", {
 										"search-searchCategory-carouselButtonVisible": showLeftButton
 									}),
 									tabIndex: -1,
 									onClick: () => handleButtonClick("LEFT"),
 									"aria-hidden": "true"
 								},
-								J0hnMilt0n.React.createElement("svg", {
+								Spicetify.React.createElement("svg", {
 									autoMirror: false,
 									semanticColor: "textBase",
 									size: "small",
-									dangerouslySetInnerHTML: { __html: J0hnMilt0n.SVGIcons["chevron-left"] }
+									dangerouslySetInnerHTML: { __html: Spicetify.SVGIcons["chevron-left"] }
 								})
 							),
-							J0hnMilt0n.React.createElement(
+							Spicetify.React.createElement(
 								"button",
 								{
-									className: J0hnMilt0n.classnames("search-searchCategory-carouselButton", {
+									className: Spicetify.classnames("search-searchCategory-carouselButton", {
 										"search-searchCategory-carouselButtonVisible": showRightButton
 									}),
 									tabIndex: -1,
 									onClick: () => handleButtonClick("RIGHT"),
 									"aria-hidden": "true"
 								},
-								J0hnMilt0n.React.createElement("svg", {
+								Spicetify.React.createElement("svg", {
 									autoMirror: false,
 									semanticColor: "textBase",
 									size: "small",
-									dangerouslySetInnerHTML: { __html: J0hnMilt0n.SVGIcons["chevron-right"] }
+									dangerouslySetInnerHTML: { __html: Spicetify.SVGIcons["chevron-right"] }
 								})
 							)
 						)
@@ -724,19 +724,19 @@ todo:
 
 	const Content = () => {
 		const defaultFilter = sessionStorage.getItem("comfy-settings-filter") ? JSON.parse(sessionStorage.getItem("comfy-settings-filter")) : null;
-		const [filter, setFilter] = J0hnMilt0n.React.useState(defaultFilter ?? { index: 0, label: "All" });
+		const [filter, setFilter] = Spicetify.React.useState(defaultFilter ?? { index: 0, label: "All" });
 
-		J0hnMilt0n.React.useEffect(() => {
+		Spicetify.React.useEffect(() => {
 			if (startup) {
 				return;
 			}
 			sessionStorage.setItem("comfy-settings-filter", JSON.stringify(filter));
 		}, [filter]);
 
-		return J0hnMilt0n.React.createElement(
+		return Spicetify.React.createElement(
 			"div",
 			{ className: "comfy-settings" },
-			J0hnMilt0n.React.createElement(Carousel, {
+			Spicetify.React.createElement(Carousel, {
 				chips: [
 					{ label: "All" },
 					{ label: "Banner Image" },
@@ -749,7 +749,7 @@ todo:
 				checked: filter,
 				setChecked: setFilter
 			}),
-			J0hnMilt0n.React.createElement(Section, { name: "Colorscheme", filter }, [
+			Spicetify.React.createElement(Section, { name: "Colorscheme", filter }, [
 				{
 					type: Dropdown,
 					name: "Color-Scheme",
@@ -855,17 +855,17 @@ todo:
 					}
 				}
 			]),
-			J0hnMilt0n.React.createElement(Section, { name: "Interface", filter }, [
+			Spicetify.React.createElement(Section, { name: "Interface", filter }, [
 				{
 					type: Input,
 					inputType: "text",
 					name: "App-Title",
 					title: "Application Title",
-					defaultVal: J0hnMilt0n.AppTitle?.get(),
+					defaultVal: Spicetify.AppTitle?.get(),
 					desc: "Change the title of the application, leave blank to reset",
 					callback: value => {
-						waitForDeps("J0hnMilt0n.Platform.UserAPI", async () => {
-							const productState = J0hnMilt0n.Platform.UserAPI._product_state || J0hnMilt0n.Platform.UserAPI._product_state_service;
+						waitForDeps("Spicetify.Platform.UserAPI", async () => {
+							const productState = Spicetify.Platform.UserAPI._product_state || Spicetify.Platform.UserAPI._product_state_service;
 							await productState.delOverridesValues({ keys: ["name"] });
 							if (value) await productState.putOverridesValues({ pairs: { name: value } });
 						});
@@ -878,10 +878,10 @@ todo:
 					title: "Titlebar Height",
 					defaultVal: "40",
 					min: "0",
-					condition: J0hnMilt0n.Config.version >= "2.33.2",
+					condition: Spicetify.Config.version >= "2.33.2",
 					callback: value => {
-						waitForDeps(["J0hnMilt0n.CosmosAsync"], async () => {
-							await J0hnMilt0n.CosmosAsync.post("sp://messages/v1/container/control", {
+						waitForDeps(["Spicetify.CosmosAsync"], async () => {
+							await Spicetify.CosmosAsync.post("sp://messages/v1/container/control", {
 								type: "update_titlebar",
 								height: `${(value === "0" ? "1" : value) || "40"}px`
 							});
@@ -897,12 +897,12 @@ todo:
 					title: "Button Radius",
 					defaultVal: "8",
 					min: "0",
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement("h4", null, "Change how circular buttons are:"),
-						J0hnMilt0n.React.createElement("li", null, "Comfy default: 8px"),
-						J0hnMilt0n.React.createElement("li", null, "Spotify default: 50px")
+						Spicetify.React.createElement("h4", null, "Change how circular buttons are:"),
+						Spicetify.React.createElement("li", null, "Comfy default: 8px"),
+						Spicetify.React.createElement("li", null, "Spotify default: 50px")
 					),
 					callback: value => document.documentElement.style.setProperty("--button-radius", value ? value + "px" : "")
 				},
@@ -946,10 +946,10 @@ todo:
 							document.documentElement.style.setProperty("--encore-body-font-stack", "");
 						}
 					},
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement(
+						Spicetify.React.createElement(
 							"div",
 							{
 								style: {
@@ -958,7 +958,7 @@ todo:
 									width: "242px"
 								}
 							},
-							J0hnMilt0n.React.createElement("img", {
+							Spicetify.React.createElement("img", {
 								src: "https://raw.githubusercontent.com/Tetrax-10/Nord-Spotify/master/assets/font/font-url.png",
 								alt: "preview",
 								style: {
@@ -966,9 +966,9 @@ todo:
 								}
 							}),
 
-							J0hnMilt0n.React.createElement("h4", null, "Usage:"),
-							J0hnMilt0n.React.createElement("li", null, "Font Name (if installed)"),
-							J0hnMilt0n.React.createElement("li", null, "URL (Google Fonts)")
+							Spicetify.React.createElement("h4", null, "Usage:"),
+							Spicetify.React.createElement("li", null, "Font Name (if installed)"),
+							Spicetify.React.createElement("li", null, "URL (Google Fonts)")
 						)
 					),
 					items: [
@@ -1026,13 +1026,13 @@ todo:
 							name: "Home-Header-Color",
 							title: "Custom Color",
 							defaultVal: "none",
-							tippy: J0hnMilt0n.React.createElement(
-								J0hnMilt0n.React.Fragment,
+							tippy: Spicetify.React.createElement(
+								Spicetify.React.Fragment,
 								null,
-								J0hnMilt0n.React.createElement("li", null, "name (red, blue, (--var), etc)"),
-								J0hnMilt0n.React.createElement("li", null, "hex (#000000)"),
-								J0hnMilt0n.React.createElement("li", null, "rgb (0, 0, 0)"),
-								J0hnMilt0n.React.createElement("li", null, "rgba (0, 0, 0, 1)")
+								Spicetify.React.createElement("li", null, "name (red, blue, (--var), etc)"),
+								Spicetify.React.createElement("li", null, "hex (#000000)"),
+								Spicetify.React.createElement("li", null, "rgb (0, 0, 0)"),
+								Spicetify.React.createElement("li", null, "rgba (0, 0, 0, 1)")
 							),
 							callback: (value, name) => {
 								waitForDeps(
@@ -1061,7 +1061,7 @@ todo:
 					defaultVal: false
 				}
 			]),
-			J0hnMilt0n.React.createElement(Section, { name: "Tracklist", filter }, [
+			Spicetify.React.createElement(Section, { name: "Tracklist", filter }, [
 				{
 					type: SubSection,
 					name: "Tracklist-Header-Background",
@@ -1098,10 +1098,10 @@ todo:
 					title: "Remove Column Bar",
 					desc: "Hides the column bar above tracklist",
 					defaultVal: true,
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement(
+						Spicetify.React.createElement(
 							"div",
 							{
 								style: {
@@ -1109,7 +1109,7 @@ todo:
 									height: "120px"
 								}
 							},
-							J0hnMilt0n.React.createElement("img", {
+							Spicetify.React.createElement("img", {
 								src: "https://github.com/Comfy-Themes/Spicetify/blob/main/images/settings/column-bar.png?raw=true",
 								alt: "preview",
 								style: {
@@ -1137,10 +1137,10 @@ todo:
 					defaultVal: "232",
 					min: "0",
 					desc: "Change the height of the gradient (the transparent part of the tracklist)",
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement("h4", null, "Set to 0 to disable the gradient!")
+						Spicetify.React.createElement("h4", null, "Set to 0 to disable the gradient!")
 					),
 					callback: value => document.documentElement.style.setProperty("--tracklist-gradient-height", value ? value + "px" : "")
 				},
@@ -1154,15 +1154,15 @@ todo:
 					max: "1",
 					step: "0.1",
 					desc: "Change the opacity of the gradient (0 -> 1)",
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement("h4", null, "Set to 0 for no gradient color!")
+						Spicetify.React.createElement("h4", null, "Set to 0 for no gradient color!")
 					),
 					callback: value => document.documentElement.style.setProperty("--tracklist-gradient-opacity", value || "")
 				}
 			]),
-			J0hnMilt0n.React.createElement(Section, { name: "Playbar", filter }, [
+			Spicetify.React.createElement(Section, { name: "Playbar", filter }, [
 				{
 					type: Slider,
 					name: "Custom-Playbar-Snippet",
@@ -1247,7 +1247,7 @@ todo:
 					defaultVal: false
 				}
 			]),
-			J0hnMilt0n.React.createElement(Section, { name: "Cover Art", filter }, [
+			Spicetify.React.createElement(Section, { name: "Cover Art", filter }, [
 				{
 					type: SubSection,
 					name: "Custom-Cover-Art-Dimensions",
@@ -1262,13 +1262,13 @@ todo:
 							document.documentElement.style.setProperty("--cover-art-bottom", "");
 						}
 					},
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement("h4", null, "Change the size of the cover art:"),
-						J0hnMilt0n.React.createElement("li", null, "Comfy default: (84px, 84px, 8px, 20px)"),
-						J0hnMilt0n.React.createElement("li", null, "Spotify default: (56px, 56px, 4px, 0px)"),
-						J0hnMilt0n.React.createElement("li", null, "Oblong: (115px, 84px, 15px, 20px)")
+						Spicetify.React.createElement("h4", null, "Change the size of the cover art:"),
+						Spicetify.React.createElement("li", null, "Comfy default: (84px, 84px, 8px, 20px)"),
+						Spicetify.React.createElement("li", null, "Spotify default: (56px, 56px, 4px, 0px)"),
+						Spicetify.React.createElement("li", null, "Oblong: (115px, 84px, 15px, 20px)")
 					),
 					items: [
 						{
@@ -1313,11 +1313,11 @@ todo:
 							name: "Cover-Art-Bottom",
 							title: "Bottom Margin",
 							defaultVal: "20px",
-							tippy: J0hnMilt0n.React.createElement(
-								J0hnMilt0n.React.Fragment,
+							tippy: Spicetify.React.createElement(
+								Spicetify.React.Fragment,
 								null,
-								J0hnMilt0n.React.createElement("li", null, "Comfy default: 20px"),
-								J0hnMilt0n.React.createElement("li", null, "Spotify default: 0px")
+								Spicetify.React.createElement("li", null, "Comfy default: 20px"),
+								Spicetify.React.createElement("li", null, "Spotify default: 0px")
 							),
 							desc: "Change the distance between the cover art and the bottom of the playbar",
 							callback: value => document.documentElement.style.setProperty("--cover-art-bottom", value ? value + "px" : "")
@@ -1325,7 +1325,7 @@ todo:
 					]
 				}
 			]),
-			J0hnMilt0n.React.createElement(Section, { name: "Banner Image", filter }, [
+			Spicetify.React.createElement(Section, { name: "Banner Image", filter }, [
 				{
 					type: Slider,
 					name: "Banner-Enabled",
@@ -1363,10 +1363,10 @@ todo:
 							document.documentElement.style.setProperty("--gradient-radius", "");
 						}
 					},
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement(
+						Spicetify.React.createElement(
 							"div",
 							{
 								style: {
@@ -1374,15 +1374,15 @@ todo:
 									height: "315px"
 								}
 							},
-							J0hnMilt0n.React.createElement("img", {
+							Spicetify.React.createElement("img", {
 								src: "https://github.com/Comfy-Themes/Spicetify/blob/main/images/settings/am-blur.gif?raw=true",
 								alt: "preview",
 								style: {
 									width: "100%"
 								}
 							}),
-							J0hnMilt0n.React.createElement("h4", null, "Blur (10x Value):"),
-							J0hnMilt0n.React.createElement("li", null, "Recommended: 4px")
+							Spicetify.React.createElement("h4", null, "Blur (10x Value):"),
+							Spicetify.React.createElement("li", null, "Recommended: 4px")
 						)
 					),
 					items: [
@@ -1419,11 +1419,11 @@ todo:
 							title: "Speed",
 							defaultVal: "50",
 							min: "0",
-							tippy: J0hnMilt0n.React.createElement(
-								J0hnMilt0n.React.Fragment,
+							tippy: Spicetify.React.createElement(
+								Spicetify.React.Fragment,
 								null,
-								J0hnMilt0n.React.createElement("h4", null, "Seconds per full rotation (360°):"),
-								J0hnMilt0n.React.createElement("li", null, "Comfy default: 50")
+								Spicetify.React.createElement("h4", null, "Seconds per full rotation (360°):"),
+								Spicetify.React.createElement("li", null, "Comfy default: 50")
 							),
 							callback: value => document.documentElement.style.setProperty("--gradient-speed", value ? value + "s" : "")
 						},
@@ -1434,11 +1434,11 @@ todo:
 							title: "Size",
 							defaultVal: "150",
 							min: "0",
-							tippy: J0hnMilt0n.React.createElement(
-								J0hnMilt0n.React.Fragment,
+							tippy: Spicetify.React.createElement(
+								Spicetify.React.Fragment,
 								null,
-								J0hnMilt0n.React.createElement("h4", null, "Width of circles in relation to viewport (in %)"),
-								J0hnMilt0n.React.createElement("li", null, "Comfy default: 150")
+								Spicetify.React.createElement("h4", null, "Width of circles in relation to viewport (in %)"),
+								Spicetify.React.createElement("li", null, "Comfy default: 150")
 							),
 							callback: value => document.documentElement.style.setProperty("--gradient-width", value ? value + "%" : "")
 						},
@@ -1468,14 +1468,14 @@ todo:
 							name: "Custom-Image-URL",
 							title: "URL",
 							defaultVal: "Paste URL here!",
-							tippy: J0hnMilt0n.React.createElement(
-								J0hnMilt0n.React.Fragment,
+							tippy: Spicetify.React.createElement(
+								Spicetify.React.Fragment,
 								null,
-								J0hnMilt0n.React.createElement("h4", null, "Network Images:"),
-								J0hnMilt0n.React.createElement("li", null, "Enter any raw image url into text box, e.g. 'https://example.com/image.png'"),
-								J0hnMilt0n.React.createElement("h4", null, "Local Images:"),
-								J0hnMilt0n.React.createElement("li", null, "Place desired image in 'spotify/Apps/xpui/images'"),
-								J0hnMilt0n.React.createElement("li", null, "Enter 'images/image.png' into text box")
+								Spicetify.React.createElement("h4", null, "Network Images:"),
+								Spicetify.React.createElement("li", null, "Enter any raw image url into text box, e.g. 'https://example.com/image.png'"),
+								Spicetify.React.createElement("h4", null, "Local Images:"),
+								Spicetify.React.createElement("li", null, "Place desired image in 'spotify/Apps/xpui/images'"),
+								Spicetify.React.createElement("li", null, "Enter 'images/image.png' into text box")
 							),
 							callback: updateBanner
 						}
@@ -1488,16 +1488,16 @@ todo:
 					title: "Image Blur",
 					defaultVal: "4",
 					min: "0",
-					tippy: J0hnMilt0n.React.createElement(
-						J0hnMilt0n.React.Fragment,
+					tippy: Spicetify.React.createElement(
+						Spicetify.React.Fragment,
 						null,
-						J0hnMilt0n.React.createElement("h4", null, "Amount of banner blur in pixels:"),
-						J0hnMilt0n.React.createElement("li", null, "Comfy default: 4px")
+						Spicetify.React.createElement("h4", null, "Amount of banner blur in pixels:"),
+						Spicetify.React.createElement("li", null, "Comfy default: 4px")
 					),
 					callback: value => document.documentElement.style.setProperty("--image-blur", value ? value + "px" : "")
 				}
 			]),
-			J0hnMilt0n.React.createElement(Section, { name: "" }, [
+			Spicetify.React.createElement(Section, { name: "" }, [
 				{
 					type: Row,
 					name: "setting-button-row",
@@ -1507,7 +1507,7 @@ todo:
 							name: "Import",
 							title: "Import",
 							callback: async (state, setState) => {
-								const paste = await J0hnMilt0n.Platform.ClipboardAPI.paste();
+								const paste = await Spicetify.Platform.ClipboardAPI.paste();
 								try {
 									JSON.parse(paste);
 									setState("Success!");
@@ -1529,7 +1529,7 @@ todo:
 							name: "Export",
 							title: "Export",
 							callback: (state, setState) => {
-								J0hnMilt0n.Platform.ClipboardAPI.copy(localStorage.getItem("comfy:config"));
+								Spicetify.Platform.ClipboardAPI.copy(localStorage.getItem("comfy:config"));
 								setState("Copied!");
 
 								new Promise(resolve => setTimeout(resolve, 2000)).then(() => {
@@ -1543,11 +1543,11 @@ todo:
 							title: "Reset",
 							callback: () => {
 								const settings = document.querySelector(".GenericModal__overlay:has(.comfy-settings)");
-								J0hnMilt0n.ReactDOM.render(
-									J0hnMilt0n.React.createElement(
-										J0hnMilt0n.ReactComponent.RemoteConfigProvider,
-										{ configuration: J0hnMilt0n.Platform.RemoteConfiguration },
-										J0hnMilt0n.React.createElement(Dialog, {
+								Spicetify.ReactDOM.render(
+									Spicetify.React.createElement(
+										Spicetify.ReactComponent.RemoteConfigProvider,
+										{ configuration: Spicetify.Platform.RemoteConfiguration },
+										Spicetify.React.createElement(Dialog, {
 											titleText: "Are you sure?",
 											descriptionText: "This will reset all settings to default!",
 											cancelText: "Cancel",
@@ -1575,19 +1575,19 @@ todo:
 	};
 
 	const headerButton = ({ label, link, svg, viewBox }) => {
-		return J0hnMilt0n.React.createElement(
-			J0hnMilt0n.ReactComponent.TooltipWrapper,
+		return Spicetify.React.createElement(
+			Spicetify.ReactComponent.TooltipWrapper,
 			{
 				label: label,
 				showDelay: 200
 			},
-			J0hnMilt0n.React.createElement(
+			Spicetify.React.createElement(
 				"button",
 				{
 					className: "main-trackCreditsModal-closeBtn",
 					onClick: () => window.open(link)
 				},
-				J0hnMilt0n.React.createElement("svg", {
+				Spicetify.React.createElement("svg", {
 					width: "18",
 					height: "18",
 					viewBox: viewBox,
@@ -1601,8 +1601,8 @@ todo:
 	};
 
 	// Settings Button + Modal
-	waitForDeps("J0hnMilt0n.Topbar.Button", () => {
-		new J0hnMilt0n.Topbar.Button(
+	waitForDeps("Spicetify.Topbar.Button", () => {
+		new Spicetify.Topbar.Button(
 			"Comfy Settings",
 			`<svg viewBox="0 0 262.394 262.394" style="width: 16px; height: 16px; fill: currentcolor"><path d="M245.63,103.39h-9.91c-2.486-9.371-6.197-18.242-10.955-26.432l7.015-7.015c6.546-6.546,6.546-17.159,0-23.705 l-15.621-15.621c-6.546-6.546-17.159-6.546-23.705,0l-7.015,7.015c-8.19-4.758-17.061-8.468-26.432-10.955v-9.914 C159.007,7.505,151.502,0,142.244,0h-22.091c-9.258,0-16.763,7.505-16.763,16.763v9.914c-9.37,2.486-18.242,6.197-26.431,10.954 l-7.016-7.015c-6.546-6.546-17.159-6.546-23.705,0.001L30.618,46.238c-6.546,6.546-6.546,17.159,0,23.705l7.014,7.014 c-4.758,8.19-8.469,17.062-10.955,26.433h-9.914c-9.257,0-16.762,7.505-16.762,16.763v22.09c0,9.258,7.505,16.763,16.762,16.763 h9.914c2.487,9.371,6.198,18.243,10.956,26.433l-7.015,7.015c-6.546,6.546-6.546,17.159,0,23.705l15.621,15.621 c6.546,6.546,17.159,6.546,23.705,0l7.016-7.016c8.189,4.758,17.061,8.469,26.431,10.955v9.913c0,9.258,7.505,16.763,16.763,16.763 h22.091c9.258,0,16.763-7.505,16.763-16.763v-9.913c9.371-2.487,18.242-6.198,26.432-10.956l7.016,7.017 c6.546,6.546,17.159,6.546,23.705,0l15.621-15.621c3.145-3.144,4.91-7.407,4.91-11.853s-1.766-8.709-4.91-11.853l-7.016-7.016 c4.758-8.189,8.468-17.062,10.955-26.432h9.91c9.258,0,16.763-7.505,16.763-16.763v-22.09 C262.393,110.895,254.888,103.39,245.63,103.39z M131.198,191.194c-33.083,0-59.998-26.915-59.998-59.997 c0-33.083,26.915-59.998,59.998-59.998s59.998,26.915,59.998,59.998C191.196,164.279,164.281,191.194,131.198,191.194z"/><path d="M131.198,101.199c-16.541,0-29.998,13.457-29.998,29.998c0,16.54,13.457,29.997,29.998,29.997s29.998-13.457,29.998-29.997 C161.196,114.656,147.739,101.199,131.198,101.199z"/></svg>`,
 			() => {
@@ -1613,9 +1613,9 @@ todo:
 				// Trigger Modal + Modal Styling
 				document.getElementById("main").classList.add("Settings-Open");
 
-				J0hnMilt0n.PopupModal.display({
+				Spicetify.PopupModal.display({
 					title: "Comfy Settings",
-					content: J0hnMilt0n.React.createElement(Content),
+					content: Spicetify.React.createElement(Content),
 					isLarge: true
 				});
 
@@ -1635,21 +1635,21 @@ todo:
 				const closeButton = document.querySelector(".main-trackCreditsModal-closeBtn");
 				const container = document.createElement("div");
 				const socialButtons = [
-					J0hnMilt0n.React.createElement(headerButton, {
-						label: "Visit Website!",
+					Spicetify.React.createElement(headerButton, {
+						label: "Join our website!",
 						link: "https://4allfreemodapks.blogspot.com/",
-						svg: `<g xmlns="http://www.w3.org/2000/svg"><path d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z" fill="currentColor" fill-rule="nonzero"></path></g>`,
-						viewBox: "0 -28.5 256 256"
+						svg: `<g xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' clip-rule='evenodd' d='M5.63605 5.63605C7.19815 4.07395 9.73081 4.07395 11.2929 5.63605L14.1213 8.46448C15.6834 10.0266 15.6834 12.5592 14.1213 14.1213C13.7308 14.5119 13.0976 14.5119 12.7071 14.1213C12.3166 13.7308 12.3166 13.0976 12.7071 12.7071C13.4882 11.9261 13.4882 10.6597 12.7071 9.87869L9.87869 7.05026C9.09764 6.26922 7.83131 6.26922 7.05026 7.05026C6.26922 7.83131 6.26922 9.09764 7.05026 9.87869L7.75737 10.5858C8.1479 10.9763 8.14789 11.6095 7.75737 12C7.36685 12.3905 6.73368 12.3905 6.34316 12L5.63605 11.2929C4.07395 9.73081 4.07395 7.19815 5.63605 5.63605ZM11.2929 9.8787C11.6834 10.2692 11.6834 10.9024 11.2929 11.2929C10.5119 12.074 10.5119 13.3403 11.2929 14.1213L14.1213 16.9498C14.9024 17.7308 16.1687 17.7308 16.9498 16.9498C17.7308 16.1687 17.7308 14.9024 16.9498 14.1213L16.2427 13.4142C15.8521 13.0237 15.8521 12.3905 16.2427 12C16.6332 11.6095 17.2663 11.6095 17.6569 12L18.364 12.7071C19.9261 14.2692 19.9261 16.8019 18.364 18.364C16.8019 19.9261 14.2692 19.9261 12.7071 18.364L9.8787 15.5356C8.3166 13.9735 8.3166 11.4408 9.8787 9.8787C10.2692 9.48817 10.9024 9.48817 11.2929 9.8787Z' fill='#fff'></path></g>`,
+						viewBox: "0 0 24 24"
 					}),
-					J0hnMilt0n.React.createElement(headerButton, {
-						label: "Visit GitHub!",
+					Spicetify.React.createElement(headerButton, {
+						label: "Visit our GitHub org!",
 						link: "https://github.com/J0hnMilt0n",
-						svg: `<g xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'><path fill-rule='evenodd' clip-rule='evenodd' d='M5.63605 5.63605C7.19815 4.07395 9.73081 4.07395 11.2929 5.63605L14.1213 8.46448C15.6834 10.0266 15.6834 12.5592 14.1213 14.1213C13.7308 14.5119 13.0976 14.5119 12.7071 14.1213C12.3166 13.7308 12.3166 13.0976 12.7071 12.7071C13.4882 11.9261 13.4882 10.6597 12.7071 9.87869L9.87869 7.05026C9.09764 6.26922 7.83131 6.26922 7.05026 7.05026C6.26922 7.83131 6.26922 9.09764 7.05026 9.87869L7.75737 10.5858C8.1479 10.9763 8.14789 11.6095 7.75737 12C7.36685 12.3905 6.73368 12.3905 6.34316 12L5.63605 11.2929C4.07395 9.73081 4.07395 7.19815 5.63605 5.63605ZM11.2929 9.8787C11.6834 10.2692 11.6834 10.9024 11.2929 11.2929C10.5119 12.074 10.5119 13.3403 11.2929 14.1213L14.1213 16.9498C14.9024 17.7308 16.1687 17.7308 16.9498 16.9498C17.7308 16.1687 17.7308 14.9024 16.9498 14.1213L16.2427 13.4142C15.8521 13.0237 15.8521 12.3905 16.2427 12C16.6332 11.6095 17.2663 11.6095 17.6569 12L18.364 12.7071C19.9261 14.2692 19.9261 16.8019 18.364 18.364C16.8019 19.9261 14.2692 19.9261 12.7071 18.364L9.8787 15.5356C8.3166 13.9735 8.3166 11.4408 9.8787 9.8787C10.2692 9.48817 10.9024 9.48817 11.2929 9.8787Z' fill='#fff'></path></g>`,
+						svg: `<path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>`,
 						viewBox: "0 0 16 16"
 					})
 				];
 
-				J0hnMilt0n.ReactDOM.render(socialButtons, container);
+				Spicetify.ReactDOM.render(socialButtons, container);
 				container.appendChild(closeButton);
 				header.appendChild(container);
 
@@ -1673,8 +1673,8 @@ todo:
 
 	// Preloading settings
 	console.debug("[Comfy-Event]: Settings Preload Started");
-	J0hnMilt0n.ReactDOM.render(J0hnMilt0n.React.createElement(Content), preloadContainer);
-	J0hnMilt0n.ReactDOM.unmountComponentAtNode(preloadContainer);
+	Spicetify.ReactDOM.render(Spicetify.React.createElement(Content), preloadContainer);
+	Spicetify.ReactDOM.unmountComponentAtNode(preloadContainer);
 
 	// Functions
 	function getConfig(key) {
@@ -1775,19 +1775,19 @@ todo:
 	}
 
 	async function updateBanner() {
-		await waitForDeps(["J0hnMilt0n.Player.data", "J0hnMilt0n.Platform.History.location"]);
+		await waitForDeps(["Spicetify.Player.data", "Spicetify.Platform.History.location"]);
 
-		const pathname = J0hnMilt0n.Platform.History.location.pathname;
+		const pathname = Spicetify.Platform.History.location.pathname;
 		let source;
 
 		if (getConfig("AM-Gradient-Include-Existing-Snippet")) {
-			const [isPlaylist, isArtist] = [J0hnMilt0n.URI.isPlaylistV1OrV2(pathname), J0hnMilt0n.URI.isArtist(pathname)];
+			const [isPlaylist, isArtist] = [Spicetify.URI.isPlaylistV1OrV2(pathname), Spicetify.URI.isArtist(pathname)];
 
 			if (isPlaylist || isArtist) {
 				const uri = `spotify:${isPlaylist ? "playlist" : "artist"}:${pathname.split("/").pop()}`;
 				const metadata = isPlaylist
-					? await J0hnMilt0n.Platform.PlaylistAPI.getMetadata(uri)
-					: await J0hnMilt0n.GraphQL.Request(
+					? await Spicetify.Platform.PlaylistAPI.getMetadata(uri)
+					: await Spicetify.GraphQL.Request(
 							{
 								name: "queryArtistOverview",
 								operation: "query",
@@ -1810,18 +1810,18 @@ todo:
 		}
 
 		if (!source && getConfig("Prefer-Existing-Image")) {
-			if (J0hnMilt0n.URI.isPlaylistV1OrV2(pathname)) {
+			if (Spicetify.URI.isPlaylistV1OrV2(pathname)) {
 				const uri = `spotify:playlist:${pathname.split("/").pop()}`;
-				const playlist = await J0hnMilt0n.Platform.PlaylistAPI.getMetadata(uri);
+				const playlist = await Spicetify.Platform.PlaylistAPI.getMetadata(uri);
 				source = playlist.images[0]?.url;
-			} else if (J0hnMilt0n.URI.isAlbum(pathname)) {
-				await waitForDeps("J0hnMilt0n.CosmosAsync");
-				const album = await J0hnMilt0n.CosmosAsync.get(`https://api.spotify.com/v1/albums/${pathname.split("/").pop()}`);
+			} else if (Spicetify.URI.isAlbum(pathname)) {
+				await waitForDeps("Spicetify.CosmosAsync");
+				const album = await Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/albums/${pathname.split("/").pop()}`);
 				source = album.images[0]?.url;
 			}
 		}
 
-		source = source ?? J0hnMilt0n.Player.data.item?.metadata?.image_xlarge_url ?? J0hnMilt0n.Player.data.track.metadata.image_xlarge_url;
+		source = source ?? Spicetify.Player.data.item?.metadata?.image_xlarge_url ?? Spicetify.Player.data.track.metadata.image_xlarge_url;
 
 		if (banner[0].src !== source) {
 			console.debug(`[Comfy-Event]: Banner Source = ${banner[0].src} -> ${source}`);
