@@ -1462,7 +1462,8 @@ if ($test_spa -and $test_js) {
 }
 
 if ($test_js) {
-    
+    # continue even if spicetify installed
+    continue
     do {
         $ch = Read-Host -Prompt ($lang).Spicetify
         Write-Host
