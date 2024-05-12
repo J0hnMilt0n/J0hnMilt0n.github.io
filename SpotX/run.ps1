@@ -1497,10 +1497,10 @@ If ($test_spa) {
     $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update')
     $entry = $zip.GetEntry('xpui.js')
     $reader = New-Object System.IO.StreamReader($entry.Open())
-    $patched_by_spotx = $reader.ReadToEnd()
+    $patched_by_J0hnMilt0n = $reader.ReadToEnd()
     $reader.Close()
 
-    If ($patched_by_spotx -match 'patched by spotx') {
+    If ($patched_by_J0hnMilt0n -match 'Patched by J0hnMilt0n') {
         $zip.Dispose()    
 
         if ($test_bak_spa) {
