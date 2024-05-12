@@ -744,12 +744,12 @@ todo:
 					{ label: "Playbar" },
 					{ label: "Tracklist" },
 					{ label: "Interface" },
-					{ label: "Colorscheme" }
+					{ label: "Color Scheme" }
 				],
 				checked: filter,
 				setChecked: setFilter
 			}),
-			Spicetify.React.createElement(Section, { name: "Colorscheme", filter }, [
+			Spicetify.React.createElement(Section, { name: "Color Scheme", filter }, [
 				{
 					type: Dropdown,
 					name: "Color-Scheme",
