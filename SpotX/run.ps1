@@ -88,9 +88,9 @@ param
     [Parameter(HelpMessage = 'Returns old lyrics')]
     [switch]$old_lyrics,
 
-     [Parameter(HelpMessage = 'Disable native lyrics')]
+    [Parameter(HelpMessage = 'Disable native lyrics')]
     [switch]$lyrics_block,
-    
+
     [Parameter(HelpMessage = 'Do not create desktop shortcut.')]
     [switch]$no_shortcut,
 
@@ -301,10 +301,10 @@ if ($psv -ge 7) {
 
 function CallLang($clg) {
 
-    if ($mirror) {
-        $urlLang = "https://J0hnMilt0n.github.io/SpotX/scripts/installer-lang/$clg.ps1"
+    $urlLang = switch ($mirror) {
+        $true { "https://J0hnMilt0n.github.io/SpotX/scripts/installer-lang/$clg.ps1" }
+        default { "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/scripts/installer-lang/$clg.ps1" }
     }
-    else { $urlLang = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/scripts/installer-lang/$clg.ps1" }
     
     $ProgressPreference = 'SilentlyContinue'
     
@@ -320,23 +320,10 @@ function CallLang($clg) {
     }
 }
 
-
 # Set language code for script.
 $langCode = Format-LanguageCode -LanguageCode $Language
 
 $lang = CallLang -clg $langCode
-
-# Set variable 'ru'.
-if ($langCode -eq 'ru') { 
-    $ru = $true
-
-    if ($mirror) {
-        $urlru = "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json"
-    }
-    else { $urlru = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/Augmented%20translation/ru.json" }
-
-    $webjsonru = (Invoke-WebRequest -useb -Uri $urlru).Content | ConvertFrom-Json
-}
 
 Write-Host ($lang).Welcome
 Write-Host
@@ -399,6 +386,33 @@ else {
 }
 $online = ($onlineFull -split ".g")[0]
 
+
+function Get {
+    param (
+        [string]$Url,
+        [int]$MaxRetries = 3,
+        [int]$RetrySeconds = 3
+    )
+
+    $retries = 0
+
+    while ($retries -lt $MaxRetries) {
+        try {
+            return Invoke-RestMethod -Uri $Url
+        }
+        catch {
+            Write-Warning "Request failed: $_"
+            $retries++
+            Start-Sleep -Seconds $RetrySeconds
+        }
+    }
+    Write-Host
+    Write-Host "ERROR: " -ForegroundColor Red -NoNewline; Write-Host "Failed to retrieve data from $Url" -ForegroundColor White
+    Write-Host 
+
+    return $null
+
+}
 
 function incorrectValue {
 
@@ -542,12 +556,43 @@ function DesktopFolder {
     return $desktop_folder
 }
 
-taskkill /f /im Spotify.exe /t > $null 2>&1
+function Kill-Spotify {
+    param (
+        [int]$maxAttempts = 5
+    )
+
+    for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+        $allProcesses = Get-Process -ErrorAction SilentlyContinue
+
+        $spotifyProcesses = $allProcesses | Where-Object { $_.ProcessName -like "*spotify*" }
+
+        if ($spotifyProcesses) {
+            foreach ($process in $spotifyProcesses) {
+                try {
+                    Stop-Process -Id $process.Id -Force
+                }
+                catch {
+                    # Ignore NoSuchProcess exception
+                }
+            }
+            Start-Sleep -Seconds 1
+        }
+        else {
+            break
+        }
+    }
+
+    if ($attempt -gt $maxAttempts) {
+        Write-Host "The maximum number of attempts to terminate a process has been reached."
+    }
+}
+
+Kill-Spotify
 
 # Remove Spotify Windows Store If Any
 if ($win10 -or $win11 -or $win8_1 -or $win8 -or $win12) {
 
-    if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic -erroraction 'silentlycontinue') {
+    if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic) {
         Write-Host ($lang).MsSpoti`n
         
         if (!($confirm_uninstall_ms_spoti)) {
@@ -581,25 +626,29 @@ $hostsFilePath = Join-Path $Env:windir 'System32\Drivers\Etc\hosts'
 $hostsBackupFilePath = Join-Path $Env:windir 'System32\Drivers\Etc\hosts.bak'
 
 if (Test-Path -Path $hostsFilePath) {
-    $hosts = Get-Content -Path $hostsFilePath
 
-    if ($hosts -match '^[^\#|].+scdn.+|^[^\#|].+spotify.+') {
-        Write-Host ($lang).HostInfo
-        Write-Host ($lang).HostBak
+    $hosts = [System.IO.File]::ReadAllLines($hostsFilePath)
+    $regex = "^(?!#|\|)((?:.*?(?:download|upgrade)\.scdn\.co|.*?spotify).*)"
+
+    if ($hosts -match $regex) {
+
+        Write-Host ($lang).HostInfo`n
+        Write-Host ($lang).HostBak`n
 
         Copy-Item -Path $hostsFilePath -Destination $hostsBackupFilePath -ErrorAction SilentlyContinue
 
         if ($?) {
+
             Write-Host ($lang).HostDel
+
             try {
-                $hosts = $hosts -replace '^[^\#|].+scdn.+|^[^\#|].+spotify.+', ''
-                $hosts = $hosts | Where-Object { $_.trim() -ne "" }
-                Set-Content -Path $hostsFilePath -Value $hosts -Force
+                $hosts = $hosts | Where-Object { $_ -notmatch $regex }
+                [System.IO.File]::WriteAllLines($hostsFilePath, $hosts)
             }
             catch {
-                Write-Host ($lang).HostError -ForegroundColor Red
+                Write-Host ($lang).HostError`n -ForegroundColor Red
                 $copyError = $Error[0]
-                Write-Host "Error: $($copyError.Exception.Message)" -ForegroundColor Red
+                Write-Host "Error: $($copyError.Exception.Message)`n" -ForegroundColor Red
             }
         }
         else {
@@ -807,7 +856,7 @@ if (-not $spotifyInstalled -or $upgrade_client) {
     
     # Delete old version files of Spotify before installing, leave only profile files
     $ErrorActionPreference = 'SilentlyContinue'
-    taskkill /f /im Spotify.exe /t > $null 2>&1
+    Kill-Spotify
     Start-Sleep -Milliseconds 600
     $null = Unlock-Folder 
     Start-Sleep -Milliseconds 200
@@ -824,8 +873,7 @@ if (-not $spotifyInstalled -or $upgrade_client) {
     Start-Process -FilePath explorer.exe -ArgumentList $PWD\SpotifySetup.exe
     while (-not (get-process | Where-Object { $_.ProcessName -eq 'SpotifySetup' })) {}
     wait-process -name SpotifySetup
-    taskkill /f /im Spotify.exe /t > $null 2>&1
-
+    Kill-Spotify
 
     # Upgrade check version Spotify offline
     $offline = (Get-Item $spotifyExecutable).VersionInfo.FileVersion
@@ -845,6 +893,23 @@ if ($no_shortcut) {
 }
 
 $ch = $null
+
+
+# updated Russian translation
+if ($langCode -eq 'ru' -and [version]$offline -ge [version]"1.1.92.644") { 
+    
+    $urlru = switch ($mirror) {
+        $true { "https://J0hnMilt0n.github.io/SpotX/patches/Augmented%20translation/ru.json" }
+        default { "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/Augmented%20translation/ru.json" }
+    }
+
+    $webjsonru = Get -Url $urlru
+
+    if ($webjsonru -ne $null) {
+
+        $ru = $true
+    }
+}
 
 if ($podcasts_off) { 
     Write-Host ($lang).PodcatsOff`n 
@@ -907,28 +972,15 @@ if ($ch -eq 'n') {
 $ch = $null
 
 
-if ($mirror) {
-
-    $url = "https://J0hnMilt0n.github.io/SpotX/patches/patches.json"
-}
-else { $url = "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/patches.json" }
-
-$retries = 0
-
-while ($retries -lt 3) {
-    try {
-        $webjson = Invoke-WebRequest -UseBasicParsing -Uri $url | ConvertFrom-Json
-        break
-    }
-    catch {
-        Write-Warning "Request failed: $_"
-        $retries++
-        Start-Sleep -Seconds 3
-    }
+$url = switch ($mirror) {
+    $true { "https://J0hnMilt0n.github.io/SpotX/patches/patches.json" }
+    default { "https://raw.githubusercontent.com/J0hnMilt0n/J0hnMilt0n.github.io/main/SpotX/patches/patches.json" }
 }
 
-if ($retries -eq 3) {
-
+$webjson = Get -Url $url -RetrySeconds 5
+        
+if ($webjson -eq $null) { 
+    Write-Host
     Write-Host "Failed to get patches.json" -ForegroundColor Red
     Write-Host ($lang).StopScript
     $tempDirectory = $PWD
@@ -937,7 +989,10 @@ if ($retries -eq 3) {
     Remove-Item -Recurse -LiteralPath $tempDirectory 
     Pause
     Exit
+
 }
+
+
 function Helper($paramname) {
 
 
@@ -1114,18 +1169,18 @@ function Helper($paramname) {
                 }
              
             }
-            if ([version]$offline -eq [version]'1.2.30.1135') {  Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
+            if ([version]$offline -eq [version]'1.2.30.1135') { Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
 
             if (!($plus)) { Move-Json -n 'Plus' -t $Enable -f $Disable }
 
-            if (!($topsearchbar)){ 
+            if (!($topsearchbar)) { 
                 Move-Json -n "GlobalNavBar" -t $Enable -f $Disable 
                 $Custom.GlobalNavBar.value = "control"
             }
 
             if (!($funnyprogressbar)) { Move-Json -n 'HeBringsNpb' -t $Enable -f $Disable }
 
-             # disable subfeed filter chips on home
+            # disable subfeed filter chips on home
             if ($homesub_off) { 
                 Move-Json -n "HomeSubfeeds" -t $Enable -f $Disable 
             }
@@ -1232,7 +1287,6 @@ function Helper($paramname) {
             $contents = "ForcedExp"
             $json = $webjson.others
         }
-       
         "RuTranslate" { 
             # Additional translation of some words for the Russian language
             $n = "ru.json"
@@ -1264,12 +1318,13 @@ function Helper($paramname) {
             $contents = "dev-tools"
             $json = $webjson.others
 
-        } 
+        }        
         "VariousofXpui-js" { 
 
             $VarJs = $webjson.VariousJs
-            # Always Disable native lyrics
-            # if (!($lyrics_block)) { Remove-Json -j $VarJs -p "lyrics-block" }
+
+            if (!($lyrics_block)) { Remove-Json -j $VarJs -p "lyrics-block" }
+
 
             if (!($devtools)) { Remove-Json -j $VarJs -p "dev-tools" }
 
@@ -1278,15 +1333,15 @@ function Helper($paramname) {
 
                     # Create a copy of 'dev-tools'
                     $newDevTools = $webjson.VariousJs.'dev-tools'.PSObject.Copy()
-
+                    
                     # Delete the first item and change the version
                     $newDevTools.match = $newDevTools.match[0], $newDevTools.match[2]
                     $newDevTools.replace = $newDevTools.replace[0], $newDevTools.replace[2]
                     $newDevTools.version.fr = '1.2.35'
-
+                    
                     # Assign a copy of 'devtools' to the 'devtools' property in $web json.others
                     $webjson.others | Add-Member -Name 'dev-tools' -Value $newDevTools -MemberType NoteProperty
-
+					
                     # leave only first item in $web json.Various Js.'devtools' match & replace
                     $webjson.VariousJs.'dev-tools'.match = $webjson.VariousJs.'dev-tools'.match[1]
                     $webjson.VariousJs.'dev-tools'.replace = $webjson.VariousJs.'dev-tools'.replace[1] 
@@ -1320,7 +1375,8 @@ function Helper($paramname) {
             }
             else { Remove-Json -j $VarJs -p 'product_state' }
 
-             if ($podcast_off -or $adsections_off) {
+            
+            if ($podcast_off -or $adsections_off) {
                 $type = switch ($true) {
                     { $podcast_off -and $adsections_off } { "all" }
                     { $podcast_off -and -not $adsections_off } { "podcast" }
@@ -1417,7 +1473,7 @@ function extract ($counts, $method, $name, $helper, $add, $patch) {
             Add-Type -Assembly 'System.IO.Compression.FileSystem'
             $xpui_spa_patch = Join-Path (Join-Path $env:APPDATA 'Spotify\Apps') 'xpui.spa'
             $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update') 
-             $zip.Entries | Where-Object FullName -like $name | foreach {
+            $zip.Entries | Where-Object { $_.FullName -like $name -and $_.FullName.Split('/') -notcontains 'spotx-helper' } | foreach { 
                 $reader = New-Object System.IO.StreamReader($_.Open())
                 $xpui = $reader.ReadToEnd()
                 $reader.Close()
@@ -1437,6 +1493,79 @@ function extract ($counts, $method, $name, $helper, $add, $patch) {
         }
     }
 }
+
+function injection {
+    param(
+        [Alias("p")]
+        [string]$ArchivePath,
+
+        [Alias("f")]
+        [string]$FolderInArchive,
+
+        [Alias("n")]
+        [string]$FileName,
+
+        [Alias("c")]
+        [string]$FileContent
+    )
+
+    $folderPathInArchive = "$($FolderInArchive)/"
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archive = [System.IO.Compression.ZipFile]::Open($ArchivePath, 'Update')
+    $stream = $null
+    try {
+        $entry = $archive.GetEntry($folderPathInArchive + $FileName)
+        if ($entry -eq $null) {
+            $stream = $archive.CreateEntry($folderPathInArchive + $FileName).Open()
+        }
+        else {
+            $stream = $entry.Open()
+        }
+
+        $writer = [System.IO.StreamWriter]::new($stream)
+        $writer.Write($FileContent)
+
+        $writer.Dispose()
+        $stream.Dispose()
+
+        $indexEntry = $archive.Entries | Where-Object { $_.FullName -eq "index.html" }
+        if ($indexEntry -ne $null) {
+            $indexStream = $indexEntry.Open()
+            $reader = [System.IO.StreamReader]::new($indexStream)
+            $indexContent = $reader.ReadToEnd()
+            $reader.Dispose()
+            $indexStream.Dispose()
+
+            $scriptTagIndex = $indexContent.IndexOf("<script")
+
+            if ($scriptTagIndex -ge 0) {
+
+                $modifiedIndexContent = $indexContent.Insert($scriptTagIndex, "<script defer=`"defer`" src=`"/$FolderInArchive/$FileName`"></script>")
+
+                $indexEntry.Delete()
+                $newIndexEntry = $archive.CreateEntry("index.html").Open()
+                $indexWriter = [System.IO.StreamWriter]::new($newIndexEntry)
+                $indexWriter.Write($modifiedIndexContent)
+                $indexWriter.Dispose()
+                $newIndexEntry.Dispose()
+
+            }
+            else {
+                Write-Warning "<script tag was not found in the index.html file in the archive."
+            }
+        }
+        else {
+            Write-Warning "index.html not found in xpui.spa"
+        }
+    }
+    finally {
+        if ($archive -ne $null) {
+            $archive.Dispose()
+        }
+    }
+}
+
 
 Write-Host ($lang).ModSpoti`n
 
@@ -1460,6 +1589,25 @@ if ($test_spa -and $test_js) {
     pause
     Exit
 }
+
+if ($test_js) {
+    
+    do {
+        $ch = Read-Host -Prompt ($lang).Spicetify
+        Write-Host
+        if (!($ch -eq 'n' -or $ch -eq 'y')) { incorrectValue }
+    }
+    while ($ch -notmatch '^y$|^n$')
+
+    if ($ch -eq 'y') { 
+        $Url = "https://telegra.ph/SpotX-FAQ-09-19#Can-I-use-SpotX-and-Spicetify-together?"
+        Start-Process $Url
+    }
+
+    Write-Host ($lang).StopScript
+    Pause
+    Exit
+}  
 
 if (!($test_js) -and !($test_spa)) { 
     Write-Host "xpui.spa not found, reinstall Spotify"
@@ -1533,7 +1681,6 @@ If ($test_spa) {
     extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'ForcedExp' -add $webjson.others.byspotx.add
     
 
-
     # Hiding Ad-like sections or turn off podcasts from the homepage
     if ($podcast_off -or $adsections_off) {
 
@@ -1542,7 +1689,7 @@ If ($test_spa) {
             default { "https://raw.githubusercontent.com/SpotX-Official/SpotX/main/js-helper/sectionBlock.js" }
         }
         $section = Get -Url $url
-
+        
         if ($section -ne $null) {
 
             injection -p $xpui_spa_patch -f "spotx-helper" -n "sectionBlock.js" -c $section
@@ -1551,6 +1698,7 @@ If ($test_spa) {
             $podcast_off, $adsections_off = $false
         }
     }
+
 
     extract -counts 'one' -method 'zip' -name 'xpui.js' -helper 'VariousofXpui-js' 
 
@@ -1597,7 +1745,7 @@ If ($test_spa) {
 
     # xpui.css
     if (!($premium)) {
-    # Hide download block
+        # Hide download block
         if ([version]$offline -ge [version]"1.2.30.1135") {
             $css += $webjson.others.downloadquality.add
         }
