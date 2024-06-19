@@ -923,7 +923,7 @@
                 "native_description": "Enables Device Picker as a side panel",
                 "version": {
                     "fr": "1.2.30",
-                    "to": "1.2.36"
+                    "to": ""
                 }
             },
             "Otfn": {
@@ -1042,6 +1042,51 @@
                     "fr": "1.2.37",
                     "to": ""
                 }
+                },
+            "SharingButtonOnMiniPlayer": {
+                "name": "enableSharingButtonOnMiniPlayer",
+                "description": "Enables sharing button on MiniPlayer (this also moves the (+) icon close to the title)",
+                "native_description": "Enables sharing button on MiniPlayer (this also moves the (+) icon close to the title)",
+                "version": {
+                    "fr": "1.2.39",
+                    "to": ""
+                }
+            },
+            "PrereleaseRadar": {
+                "name": "enablePrereleaseRadar",
+                "description": "Show a curated list of upcoming albums to a user",
+                "native_description": "Show a curated list of upcoming albums to a user",
+                "version": {
+                    "fr": "1.2.39",
+                    "to": ""
+                }
+            },
+            "PremiumOnlyModal": {
+                "name": "disablePremiumOnlyModal",
+                "description": "Disable the Premium Only Modal",
+                "native_description": "Disable the Premium Only Modal",
+                "version": {
+                    "fr": "1.2.39",
+                    "to": ""
+                }
+            },
+            "CenteredLayout": {
+                "name": "enableCenteredLayout",
+                "description": "Enable centered in 'what's new'",
+                "native_description": "Enable centered layout",
+                "version": {
+                    "fr": "1.2.39",
+                    "to": ""
+                }
+            },
+            "AlignedCurationSavedIn": {
+                "name": "enableAlignedCurationSavedIn",
+                "description": "Enables the Saved In section in Aligned Curation",
+                "native_description": "Enables the Saved In section in Aligned Curation",
+                "version": {
+                    "fr": "1.2.40",
+                    "to": ""
+                }
             }
         },
         "CustomExp": {
@@ -1152,6 +1197,16 @@
                 "value": "canvas-play-loop",
                 "version": {
                     "fr": "1.2.33",
+                    "to": ""
+                }     
+            },
+            "shareButtonPositioning": {
+                "name": "shareButtonPositioning",
+                "description": "Share button positioning in NPV",
+                "native_description": "Share button positioning in NPV",
+                "value": "NPV_ALWAYS_VISIBLE",
+                "version": {
+                    "fr": "1.2.39",
                     "to": ""
                 }
             }
@@ -1655,7 +1710,7 @@
                 "fr": "1.1.93",
                 "to": ""
             },
-            "match": "(this\\.(?:productStateApi|_product_state)(?:|_service)=(.))(?=}|,this\\.productStateApi|,this\\._events)",
+            "match": "(this\\.(?:productStateApi|_product_state)(?:|_service)=(.))(?=}|(?:,this\\.cache=.)?,this\\.productStateApi|,this\\._events)",
             "replace": "$1,$2?.putOverridesValues?.({0})",
             "add": "ads:'0',catalogue:'premium',product:'premium',type:'premium',name:'Spotify','unrestricted':'1'",
             "add2": "'storage-size-config':'{0},90,500,3'"
