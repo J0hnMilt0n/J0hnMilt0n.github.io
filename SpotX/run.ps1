@@ -369,7 +369,7 @@ if (!($version -and $version -match $match_v)) {
     }
     else {  
         # Recommended version for Win 10-12
-        $onlineFull = "1.2.39.578.g0ea3f38b-107"
+        $onlineFull = "1.2.40.599.g606b7f29-1500"
     }
 }
 else {
@@ -1158,20 +1158,23 @@ function Helper($paramname) {
             if ($enhance_like_off) { Remove-Json -j $Enable -p'EnhanceLikedSongs' }
             if ($enhance_playlist_off) { Remove-Json -j $Enable -p 'EnhancePlaylist' }
             
-
+	if ([version]$offline -eq [version]'1.2.37.701' -or [version]$offline -eq [version]'1.2.38.720' ) { 
+                Move-Json -n 'DevicePickerSidePanel' -t $Enable -f $Disable
+            }
+	    
             if ($enhanceSongs -and [version]$offline -le [version]'1.2.25.1011') { 
                 Move-Json -n 'SmartShuffle' -t $Enable -f $Disable 
             }
             else { 
              
                 if ([version]$offline -ge [version]'1.2.22.980') {
-                    Move-Json -n "EnhanceLikedSongs", "EnhancePlaylist"-t $Enable -f $Disable
+                    Move-Json -n "EnhanceLikedSongs", "EnhancePlaylist" -t $Enable -f $Disable
                 }
              
             }
             if ([version]$offline -eq [version]'1.2.30.1135') { Move-Json -n 'QueueOnRightPanel' -t $Enable -f $Disable }
 
-            if (!($plus)) { Move-Json -n 'Plus' -t $Enable -f $Disable }
+            if (!($plus)) { Move-Json -n "Plus", "AlignedCurationSavedIn" -t $Enable -f $Disable }
 
             if (!($topsearchbar)) { 
                 Move-Json -n "GlobalNavBar" -t $Enable -f $Disable 
