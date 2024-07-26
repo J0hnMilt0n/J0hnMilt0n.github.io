@@ -6,7 +6,7 @@
 		<description>Recent content in Series on J0hnMilt0n.github.io</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
-		<copyright>© <a href='J0hnMilt0n.github.io' id='linked'>J0hnMilt0n </a><script type='text/javascript'>var creditsyear = new Date();document.write(creditsyear.getFullYear());</script></copyright>
+		<copyright>© <a href='#' id='linked'>J0hnMilt0n </a><script type='text/javascript'>var creditsyear = new Date();document.write(creditsyear.getFullYear());</script></copyright>
 		<atom:link href="https://J0hnMilt0n.github.io/series/index.xml" rel="self" type="application/rss+xml" />
 	</channel>
 </rss>
