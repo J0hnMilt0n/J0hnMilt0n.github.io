@@ -15,9 +15,9 @@
 		<atom:link href="https://J0hnMilt0n.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
 		<item>
 			<title>Build Kali Docker on M1 Mac</title>
-			<link>https://J0hnMilt0n.github.io/post/build-kali-docker-on-m1-mac/</link>
+			<link>https://J0hnMilt0n.github.io/build-kali-docker-on-m1-mac/</link>
 			<pubDate>Tue, 18 Oct 2022 15:49:37 -0400</pubDate>
-			<guid>https://J0hnMilt0n.github.io/post/build-kali-docker-on-m1-mac/</guid>
+			<guid>https://J0hnMilt0n.github.io/build-kali-docker-on-m1-mac/</guid>
 			<description>
 			Background: I personally use M1 Macbook. It’s pretty tricky to install VMs on it. So why don’t we just use docker?
 Install and run Kali …

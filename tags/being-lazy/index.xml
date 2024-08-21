@@ -15,9 +15,9 @@
 		<atom:link href="https://J0hnMilt0n.github.io/tags/being-lazy/index.xml" rel="self" type="application/rss+xml" />
 		<item>
 			<title>How to Access PC at Home</title>
-			<link>https://J0hnMilt0n.github.io/post/how-to-access-pc-at-home/</link>
+			<link>https://J0hnMilt0n.github.io/how-to-access-pc-at-home/</link>
 			<pubDate>Sun, 09 Oct 2022 18:43:00 -0400</pubDate>
-			<guid>https://J0hnMilt0n.github.io/post/how-to-access-pc-at-home/</guid>
+			<guid>https://J0hnMilt0n.github.io/how-to-access-pc-at-home/</guid>
 			<description>
 			Background Story Why I want to access my PC at home?
 It’s too heavy to carry around. It’s Intel based while my laptop is a M1 mac. It can …
@@ -25,18 +25,18 @@ It’s too heavy to carry around. It’s Intel based while my laptop is a M1 mac
 		</item>
 		<item>
 			<title>SSH Login Without Password</title>
-			<link>https://J0hnMilt0n.github.io/post/ssh-login-without-password/</link>
+			<link>https://J0hnMilt0n.github.io/ssh-login-without-password/</link>
 			<pubDate>Sun, 22 May 2022 17:37:30 -0400</pubDate>
-			<guid>https://J0hnMilt0n.github.io/post/ssh-login-without-password/</guid>
+			<guid>https://J0hnMilt0n.github.io/ssh-login-without-password/</guid>
 			<description>
 			Add remote host to ssh config file $ nano ~/.ssh/config Host remotehost Hostname <remote host hostname or ip> Port <remote host ssh port> HostKeyAlias remotehost User <your name> Create public and …</your></remote></remote>
 			</description>
 		</item>
 		<item>
 			<title>Automated Birthday Wisher</title>
-			<link>https://J0hnMilt0n.github.io/post/auto-birthday-wisher/</link>
+			<link>https://J0hnMilt0n.github.io/auto-birthday-wisher/</link>
 			<pubDate>Sat, 21 May 2022 13:02:40 -0400</pubDate>
-			<guid>https://J0hnMilt0n.github.io/post/auto-birthday-wisher/</guid>
+			<guid>https://J0hnMilt0n.github.io/auto-birthday-wisher/</guid>
 			<description>
 			Objectives: Send email using python code.
 Libraries: smtplib, datetime, pandas

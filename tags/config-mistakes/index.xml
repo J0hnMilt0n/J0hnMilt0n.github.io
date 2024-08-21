@@ -15,9 +15,9 @@
 		<atom:link href="https://J0hnMilt0n.github.io/tags/config-mistakes/index.xml" rel="self" type="application/rss+xml" />
 		<item>
 			<title>HTB-Meow</title>
-			<link>https://J0hnMilt0n.github.io/post/htb-meow/</link>
+			<link>https://J0hnMilt0n.github.io/htb-meow/</link>
 			<pubDate>Sat, 12 Mar 2022 21:12:42 -0500</pubDate>
-			<guid>https://J0hnMilt0n.github.io/post/htb-meow/</guid>
+			<guid>https://J0hnMilt0n.github.io/htb-meow/</guid>
 			<description>
 			This box is about “configuration mistakes”.
 When there’s a login box, try:
